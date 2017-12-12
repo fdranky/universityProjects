@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/antibioNoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blue_background"
+        android:gravity="center"
+        android:text="@string/microbiologicalExamination"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/mbNotCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mbIsThereCheckBox"
+        android:layout_below="@+id/mbIsThereCheckBox"
+        android:layout_marginTop="28dp"
+        android:text="Nicht durchgeführt" />
+
+    <CheckBox
+        android:id="@+id/mbIsThereCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mbRequiredCheckBox"
+        android:layout_below="@+id/mbRequiredCheckBox"
+        android:layout_marginTop="25dp"
+        android:text="Befunde vorhanden" />
+
+    <CheckBox
+        android:id="@+id/mbUnknownInMbCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mbNotCheckBox"
+        android:layout_below="@+id/mbNotCheckBox"
+        android:layout_marginTop="23dp"
+        android:text="Unklar" />
+
+    <CheckBox
+        android:id="@+id/mbRequiredCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/antibioNoTextView"
+        android:layout_marginLeft="86dp"
+        android:layout_marginTop="52dp"
+        android:text="Angefordert" />
+
+    <Button
+        android:id="@+id/okButtonint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="35dp"
+        android:background="@drawable/rounded_button"
+        android:text="@string/ok" />
+
+</RelativeLayout>

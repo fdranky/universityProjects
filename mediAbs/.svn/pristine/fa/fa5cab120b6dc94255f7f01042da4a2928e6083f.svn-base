@@ -1,0 +1,525 @@
+package com.example.mediabs;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import net.sqlcipher.database.SQLiteDatabase;
+
+import connection.AntibioticTitleDataSource;
+import connection.ChecklistDataSource;
+import connection.DosageTitleDataSource;
+import connection.InterventionTypesDataSource;
+import connection.PatientDataSource;
+import connection.TimerDataSource;
+import connection.UpdateInterface;
+import connection.UserDataSource;
+import connection.WardDataSource;
+import connection.AntibioticDataSource;
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.SystemClock;
+import android.util.Log;
+import android.widget.Chronometer;
+import android.widget.Toast;
+import logic.*;
+
+public class Update extends Application implements UpdateInterface{
+	
+	private Chronometer chrono;
+	private boolean ChronometerRunning;
+	private long elapsedMillis; 
+	private long timeWhenStopped;
+	private ArrayList<User> userList = new ArrayList<User>();
+	private ArrayList<Ward> wardList = new ArrayList<Ward>();
+	private ArrayList<Checklist> checklistList = new ArrayList<Checklist>();
+	private ArrayList<String> allAntibiotics = new ArrayList<String>();
+	private ArrayList<String> allDosages = new ArrayList<String>();
+	private ArrayList<String> allInterventions = new ArrayList<String>();
+	private ArrayList<String> allDiagnosis = new ArrayList<String>();
+	
+	private String currentUserName = "unknown";
+	private String currentPassword = "unknown";
+	
+	private int actualRound = 1;
+	
+	public Update(){
+//		Ward station1 = new Ward("Intensiv");
+//		wardList.add(station1);
+//		Ward station2 = new Ward("Kardiologie");
+//		wardList.add(station2);
+//		Ward station3 = new Ward("Blubb");
+//		wardList.add(station3);
+		Log.w("lel", "Update-Klasse erstellt");
+		
+		// F�ge eine Beispielcheckliste ein
+		ArrayList<Antibiotic> antibioticList = new ArrayList<Antibiotic>();
+		
+		ArrayList<String> interventions = new ArrayList<String>();
+		interventions.add("Eskalation");
+		interventions.add("Fokussuche");
+		
+
+		allDiagnosis.add("HWI");
+		allDiagnosis.add("Sepsis");
+		
+		Antibiotic anti1 = new Antibiotic("Amoxicillin", "200mg", 10, "iv", "Kommentar", "prophTher", interventions);
+		
+		antibioticList.add(anti1);
+		
+		Checklist cs = new Checklist(false, "HPB", "micrBio", "team", 1, 20130917, antibioticList, allDiagnosis);
+		checklistList = new ArrayList<Checklist>();
+		checklistList.add(cs);
+		
+	}
+
+	/**
+	 * initializes Update-object - querys data from database...
+	 * call only once in LoginActivity!
+	 * @param context - context of calling activity
+	 */
+	public void initData(Context context) {
+		SQLiteDatabase.loadLibs(this);
+		Log.w("lel", "Methode initDB aufgerufen!");
+		
+		/** load ward list */
+		WardDataSource wardDatabase = new WardDataSource(context);
+		wardDatabase.open();
+		ArrayList<Ward> wards = wardDatabase.getAllWards();
+		this.setWardList(wards);
+		wardDatabase.close();
+		
+		
+		/** load patient list */
+		PatientDataSource patientDatabase = new PatientDataSource(context);
+		patientDatabase.open();
+		for (Ward w: wards) {
+			ArrayList<Patient> patients = patientDatabase.getAllPatients(w.getWardNumber());
+			w.setPatientList(patients);
+			Log.w("list", patients.size()+" in Station "+w.getWardNumber());
+		}
+	    patientDatabase.close();
+		
+		/** load checklist list */
+		ChecklistDataSource checklistDatabase = new ChecklistDataSource(context);
+		AntibioticDataSource antibioticDatabase = new AntibioticDataSource(context);
+		checklistDatabase.open();
+		antibioticDatabase.open();
+		
+		ArrayList<Checklist> checklists = checklistDatabase.getAllChecklists();
+		this.setChecklistList(checklists);
+		
+		/** set antibiotic list in each checklist */
+		for (Checklist cl : checklists) {
+			cl.setAntibioticList(antibioticDatabase.getAntibioticsOfPatient(cl.getOwner()));
+		}
+		
+		antibioticDatabase.close();
+		checklistDatabase.close();
+		
+		Log.w("lel", "Checklisten: "+checklists.toString());	// TODO Log entfernen
+		
+		
+		/** load user list */
+		UserDataSource userDatabase = new UserDataSource(context);
+		userDatabase.open();
+		this.setUserList(userDatabase.getAllUsers());
+		userDatabase.close();
+		
+		/** load antibiotic list */
+		
+				
+		AntibioticTitleDataSource antibioticTitleDatabase = new AntibioticTitleDataSource(context);
+		antibioticTitleDatabase.open();
+		ArrayList<String> antibioticTitles = antibioticTitleDatabase.getTitleOfAntibiotics();
+		this.setAllAntibiotics(antibioticTitles);
+		antibioticTitleDatabase.close();
+		
+		// test antibiotic titles
+		allAntibiotics.add("Amoxicillin");
+		allAntibiotics.add("Cefixim");
+		allAntibiotics.add("Rifampicin");
+		
+		
+		/** load diagnosis list */
+		DosageTitleDataSource dosagesTitleDatabase = new DosageTitleDataSource(context);
+		dosagesTitleDatabase.open();
+		ArrayList<String> dosagesTitles = dosagesTitleDatabase.getTitleOfDosages();
+		this.setAllDiagnosis(dosagesTitles);
+		dosagesTitleDatabase.close();
+		
+		/** load intervention list */
+		InterventionTypesDataSource interventionTitleDatabase = new InterventionTypesDataSource(context);
+		interventionTitleDatabase.open();
+		ArrayList<String> interventionTitles = interventionTitleDatabase.getTitleOfInterventionType();
+		this.setAllInterventions(interventionTitles);
+		interventionTitleDatabase.close();
+		
+
+		/** set rotation counter */
+		SharedPreferences prefs = this.getSharedPreferences("com.example.mediabs", Context.MODE_PRIVATE);
+		actualRound = prefs.getInt("com.example.mediabs.rotation", 1);
+		
+		
+	}
+	
+	
+	
+	/** stores patient list back to database */
+	public void storePatients(Context context) {
+		
+		PatientDataSource patientDatabase = new PatientDataSource(context);
+		patientDatabase.open();
+		patientDatabase.clearTable();
+		
+		//Log.w("lel", "L�nge der wardlist: "+wardList.size());	// TODO: Log entfernen
+		for (Ward w: wardList) {
+			//Log.w("lel", "L�nge der patientenListe: "+w.getPatientList().size()); // TODO: Log entfernen	
+			for (Patient p: w.getPatientList()) {
+				//Log.w("lel", "Speichere Patienten: "+p.getDescription()); // TODO: Log entfernen
+				patientDatabase.insertPatient(p, w.getWardNumber());
+			}
+		}
+		patientDatabase.close();
+	}
+	
+	/** stores user list back to database */
+	public void storeUsers(Context context) {
+		
+		UserDataSource userDatabase = new UserDataSource(context);
+		userDatabase.open();
+		userDatabase.clearTable();
+		
+		for (User u: userList) {
+			userDatabase.insertUser(u);
+		}
+		userDatabase.close();
+	}
+	
+	/** stores ward list back to database */
+	public void storeWards(Context context) {
+		
+		WardDataSource wardDatabase = new WardDataSource(context);
+		wardDatabase.open();
+		wardDatabase.clearTable();
+		
+		for (Ward w: wardList) {
+			wardDatabase.insertWard(w);
+		}
+		wardDatabase.close();
+	}
+	
+	/** stores checklists back to database */
+	public void storeChecklists(Context context) {
+		
+		ChecklistDataSource checklistDatabase = new ChecklistDataSource(context);
+		AntibioticDataSource antibioticDatabase = new AntibioticDataSource(context);
+		
+		checklistDatabase.open();
+		antibioticDatabase.open();
+		
+		checklistDatabase.clearTable();
+		antibioticDatabase.clearTable();
+		
+		for (Checklist cl : checklistList) {
+			
+			Log.w("lel", "Schreibe Checkliste in Datenbank: "+cl.toString());	// TODO Log entfernen
+			checklistDatabase.insertChecklist(cl);
+			
+			for (Antibiotic a : cl.getAntibioticList()) {
+				antibioticDatabase.insertAntibiotic(a, cl.getOwner());
+			}
+		}
+		
+		antibioticDatabase.close();
+		checklistDatabase.close();
+	}
+	
+	// Store DosageTitles to database
+	public void storeAllDiagnosis (Context context) {
+		
+		DosageTitleDataSource dosagesDatabase = new DosageTitleDataSource(context);
+		
+		dosagesDatabase.open();
+		dosagesDatabase.clearTable();
+		
+		for(String ab : allDiagnosis) {
+			dosagesDatabase.insertDosageTitle(ab);
+		}
+		
+		dosagesDatabase.close();
+	}
+	
+	// Store InterventionTypeTitles to database
+	public void storeAllInterventionTypeTitles(Context context) {
+		
+		InterventionTypesDataSource interventionTypeDatabase = new InterventionTypesDataSource(context);
+		
+		interventionTypeDatabase.open();
+		interventionTypeDatabase.clearTable();
+		
+		for(String it : allInterventions) {
+			interventionTypeDatabase.insertInterventionTypeTitle(it);
+		}
+		
+		interventionTypeDatabase.close();
+	}
+	
+	// Store AntibioticTitles to Database
+	public void storeAllAntibioticTitles(Context context) {
+		
+		AntibioticTitleDataSource antibioticTitleDatabase = new AntibioticTitleDataSource(context);
+		
+		antibioticTitleDatabase.open();
+		antibioticTitleDatabase.clearTable();
+		
+		for(String at : allAntibiotics) {
+			Log.w("lel", "F�ge Antibiotikum hinzu: "+at);
+			antibioticTitleDatabase.insertAntibioticTitle(at);
+		}
+		
+		antibioticTitleDatabase.close();
+	}
+	
+	// Store TimerData to Database
+	public void storeTimerData(Context context, TimerData timerData) {
+		
+		TimerDataSource timerDatabase = new TimerDataSource(context);
+		
+		timerDatabase.open();
+		timerDatabase.insertTimerData(timerData);
+		timerDatabase.close();
+
+	}
+	
+	public ArrayList<TimerData> loadTimerData(Context context) {
+		/** load timerData */
+		TimerDataSource timerDatabase = new TimerDataSource(context);
+		timerDatabase.open();
+		ArrayList<TimerData> timer = timerDatabase.getAllTimerData();
+		timerDatabase.close();
+		
+		return timer;
+	}
+
+	public ArrayList<User> getUserList() {
+		return userList;
+	}
+
+	public void setUserList(ArrayList<User> userList) {
+		this.userList = userList;
+	}
+
+	public ArrayList<Ward> getWardList() {
+		return wardList;
+	}
+
+	public void setWardList(ArrayList<Ward> wardList) {
+		this.wardList = wardList;
+	}
+	
+	public ArrayList<Checklist> getChecklistList() {
+		return checklistList;
+	}
+	
+	public void addCheckList(Checklist newChecklist) {
+		checklistList.add(newChecklist);
+	}
+	
+	public void setChecklistList(ArrayList<Checklist> checklistList) {
+		this.checklistList = checklistList;
+	}
+	
+	public ArrayList<String> getAllDiagnosis() {
+		return allDiagnosis;
+	}
+
+	public void setAllDiagnosis(ArrayList<String> allDiagnosis) {
+		this.allDiagnosis = allDiagnosis;
+	}
+
+	
+	
+	
+	/***
+	 * Validates username-password-combination
+	 * @param username - name of the potential user
+	 * @param password - password of the potential user
+	 * @return true if login data is correct, false otherwise 
+	 */
+	public boolean login(String username, String password) {
+		
+		for (User u: userList) {
+			
+			Log.w("lel", "Nutzer: "+username);	// TODO Log-Ausgaben herausnehmen!
+			Log.w("lel", "Eingeg. Nutzer: "+u.getName());
+			Log.w("lel", "Eingegeben: "+password);
+			Log.w("lel", "Eingegeben (Hash): "+computeHash(password));
+			Log.w("lel", "DB:"+u.getPassword());
+			
+			if ((u.getName().equals(username)) && 
+				(u.getPassword().equals(computeHash(password)))) {
+					return true;
+			}
+		}
+		
+		return false;
+		
+	}
+
+	//public logout();
+	//public updateWards();
+	//public updateUserData();
+	
+	/** computes the sha256-hash of a string - necassary for login-validation */
+	  public String computeHash(String input) {
+		  MessageDigest md=null;
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	        md.update(input.getBytes());
+	 
+	        byte byteData[] = md.digest();
+	 
+	        //convert the byte to hex format method 1
+	        StringBuffer sb = new StringBuffer();
+	        for (int i = 0; i < byteData.length; i++) {
+	         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+	        }
+		    return sb.toString();
+		}
+	  
+	  
+	  /** find a patient by name (desciption) */
+	  public Patient findPatByName(String name) {
+		  
+		  for (Ward w: wardList) {
+			  for (Patient p: w.getPatientList()) {
+				  if (p.getDescription().equals(name)) {
+					  return p;
+				  }
+			  }
+		  }
+		  
+		  throw new IllegalArgumentException("No patient found with name: "+name);
+	  }
+
+	public ArrayList<String> getAllAntibiotics() {
+		return allAntibiotics;
+	}
+
+	public void setAllAntibiotics(ArrayList<String> allAntibiotics) {
+		this.allAntibiotics = allAntibiotics;
+	}
+
+	public ArrayList<String> getAllDosages() {
+		
+		ArrayList<String> pseudoDosages= new ArrayList<String>();
+		pseudoDosages.add("40");
+		pseudoDosages.add("60");
+		setAllDosages(pseudoDosages);
+		
+		return pseudoDosages;
+	}
+	
+	public void setAllDosages(ArrayList<String> allDiagnosis) {
+		this.allDosages = allDiagnosis;
+	}
+
+	public ArrayList<String> getAllInterventionTypeTitles() {
+		return allInterventions;
+	}
+	
+	public void setAllInterventions(ArrayList<String> allInterventions) {
+		this.allInterventions = allInterventions;
+	}
+	
+	public String getCurrentUserName() {
+		return currentUserName;
+	}
+
+	public void setCurrentUserName(String currentUserName) {
+		this.currentUserName = currentUserName;
+	}
+
+	public String getCurrentPassword() {
+		return currentPassword;
+	}
+
+	public void setCurrentPassword(String currentPassword) {
+		this.currentPassword = currentPassword;
+	}
+
+	public int getActualRound() {
+		return actualRound;
+	}
+	
+	public void incActualRound() {
+		SharedPreferences prefs = this.getSharedPreferences("com.example.mediabs", Context.MODE_PRIVATE);
+		prefs.edit().putInt("com.example.mediabs.rotation", actualRound+1).commit();
+		actualRound++;
+	}
+	
+	/** returns actual date as int */
+	public int getCurrentDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String currentDate= sdf.format(new Date());
+		return Integer.valueOf(currentDate);
+	}
+	
+	/* Chronometer methods */
+	public void showElapsedTime(Context context, String string) {
+		
+	    long elapsedSec = (SystemClock.elapsedRealtime() - getChrono().getBase()) / 1000 ;            
+	    Toast.makeText(context, "Sek.: " + elapsedSec + " - " + string, 
+	            Toast.LENGTH_SHORT).show();
+	}
+	
+	public boolean isChronometerRunning() {
+		return ChronometerRunning;
+	}
+	
+	public long getElapsedSec() {
+		return (SystemClock.elapsedRealtime() - getChrono().getBase()) / 1000 ;
+	}
+	
+	public long getTimeWhenStopped() {
+		return timeWhenStopped;
+	}
+
+	public void chronoStart(Context context) {
+			ChronometerRunning = true;
+		
+	        int stoppedMilliseconds = 0;
+	         
+	         getChrono().setBase(SystemClock.elapsedRealtime() - stoppedMilliseconds);
+	         getChrono().start();
+	         showElapsedTime(context, "Stopuhr gestartet!");
+	}
+
+	public void chronoStop(Context context) {
+			ChronometerRunning = false;
+	        getChrono().stop();
+	        showElapsedTime(context, "Stopuhr angehalten!");
+	}
+
+	public void chronoReset(Context context) {
+	        getChrono().setBase(SystemClock.elapsedRealtime());
+	        showElapsedTime(context, "Reset");
+	}
+
+	public Chronometer getChrono() {
+		return chrono;
+	}
+
+	public void setChrono(Chronometer chrono) {
+		this.chrono = chrono;
+	}
+	
+}

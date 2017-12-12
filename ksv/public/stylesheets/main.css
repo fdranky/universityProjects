@@ -1,0 +1,102 @@
+body {
+	padding-top: 60px;
+}
+
+@media ( max-width : 979px) {
+	body {
+		padding-top: 0px;
+	}
+}
+
+.border-row {
+	border-bottom: 1px solid #ccc;
+}
+
+.thumb {
+	margin-bottom: 30px;
+}
+
+.mainbackground {
+	background: url('/public/images/kamerun.jpg') center center;
+	min-height: 600px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-size: cover
+}
+
+.carousel-inner>.item>img {
+	margin: 0 auto;
+}
+
+.textontop { 
+   position: absolute; 
+   left: 0; 
+   width: 100%; 
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.dropdown-menu {
+    margin-top: 0px;
+}
+
+.middle {
+	display: inline-block;
+	margin: auto;
+	vertical-align: middle;
+}
+
+.leftbackground {
+	background: url('/public/images/quiz.jpg') center center;
+	cursor: pointer;
+	background-size: cover;
+	background-repeat: no-repeat;
+	min-height: 200px;
+}
+
+.middlebackground {
+	background: url('/public/images/aboutus.jpg') center center;
+	cursor: pointer;
+	background-size: cover;
+	background-repeat: no-repeat;
+	min-height: 200px;
+}
+
+.bs-section{
+	margin-bottom:40px;
+}
+.rightbackground {
+	background: url('/public/images/geschichte.jpg') center center;
+	cursor: pointer;
+	background-size: cover;
+	background-repeat: no-repeat;
+	min-height: 200px;
+}
+
+
+.img-center {
+	align: center;
+	valign: center;
+}
+
+.add-bottom {
+	margin-bottom: 20px;
+
+	important;
+}
+
+.add-margin{
+	margin-right: 40px;
+}
+
+.bigsize {
+	height: 600px;
+	width: 1066px;
+}
+.responsible-image img{
+	margin-top:15px;
+}
+
+.responsible-image img,.country-image img,.food-image img,.geography-image img,.history-image img,.top10-image img,.shopping-image img{
+	margin-bottom:15px;
+}

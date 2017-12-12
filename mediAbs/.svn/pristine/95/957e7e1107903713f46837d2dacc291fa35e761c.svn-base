@@ -1,0 +1,32 @@
+package logic;
+import org.simpleframework.xml.*;
+
+@Root
+public class TimerData {
+	
+	@Element
+	Integer rotation;
+	@Element
+	String user;
+	@Element
+	Integer duration;
+	@Element
+	Integer ward;
+	
+	
+	public TimerData(Integer rotation, String user, Integer duration,
+			Integer ward) {
+		super();
+		this.rotation = rotation;
+		this.user = user;
+		this.duration = duration;
+		this.ward = ward;
+	}
+	
+
+	
+	
+
+	
+
+}

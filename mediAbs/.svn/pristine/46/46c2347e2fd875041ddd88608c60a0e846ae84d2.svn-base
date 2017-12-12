@@ -1,0 +1,317 @@
+package restclient;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import org.apache.http.HttpException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.conn.ConnectTimeoutException;
+import android.app.AlertDialog;
+import java.io.StringWriter;
+
+import logic.InfectionDiagnosis;
+import logic.InterventionType;
+import logic.User;
+import logic.Ward;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import android.os.StrictMode;
+import android.util.Base64;
+
+
+
+/**
+ * 
+ * @author smh
+ * 
+ * RestUtils class
+ * implements POST and GET functions
+ * 
+ * TODO exception forwarding to android surface
+ *
+ */
+public class RestUtils {
+	
+	int timeout = 5000; // timeout in milliseconds for http-requests
+	
+	/**
+	 * Change Strict Mode on newer Android Versions
+	 */
+	public RestUtils() {
+		super();
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+	}
+
+	/**
+	 * POST multiple Objects in given Arraylist dataList
+	 * Choose type of Content to POST via type Parameter
+	 * Avaiable type Strings are statisticdata or timerdata
+	 * @param credentials
+	 * @param type
+	 * @param dataList
+	 * 
+	 * TODO URL still hardcoded
+	 */
+	public <OBJECTS> void post(String credentials, String type, ArrayList<OBJECTS> dataList){
+		if("statisticdata".equals(type)){
+			String myUrl = "http://10.0.2.2:8080/medi_abs/statisticDataImport/index";
+			for (OBJECTS statisticData : dataList) {
+				String myString = serializeObject(statisticData);
+				String responseStr = "";
+				try {
+					responseStr = postObject(myString, credentials, myUrl);
+				} catch (ConnectTimeoutException e) {
+					showErrorDialog(e.getMessage());
+				} catch (ClientProtocolException e) {
+					showErrorDialog(e.getMessage());
+				} catch (IOException e) {
+					showErrorDialog(e.getMessage());
+				} catch (HttpException e) {
+					showErrorDialog(e.getMessage());
+				}
+				System.out.println(responseStr);
+			}
+			
+		}
+		if("timerdata".equals(type)){
+			String myUrl = "http://10.0.2.2:8080/medi_abs/timerDataImport/index";
+			for (OBJECTS timerData : dataList) {
+				String myString = serializeObject(timerData);
+				String responseStr = "";
+				try {
+					responseStr = postObject(myString, credentials, myUrl);
+				} catch (ConnectTimeoutException e) {
+					showErrorDialog(e.getMessage());
+				} catch (ClientProtocolException e) {
+					showErrorDialog(e.getMessage());
+				} catch (IOException e) {
+					showErrorDialog(e.getMessage());
+				} catch (HttpException e) {
+					showErrorDialog(e.getMessage());
+				}
+				System.out.println(responseStr);
+			}		
+		
+		}
+
+		
+			
+	}
+	
+	
+
+	/**
+	 * POST one Single XMLObject as objString at given postURL
+	 * 
+	 * @param objString
+	 * @param credentials
+	 * @param postUrl
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws HttpException
+	 */
+	public String postObject(String objString, String credentials, String postUrl) throws ClientProtocolException, IOException, HttpException{
+		/**
+		 * Encode Authentication Credentials
+		 */
+		String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+		/**
+		 * Create HTTP Client and set Timeout to 3sec
+		 */
+		HttpParams httpParameters = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+		HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpPost post = new HttpPost(postUrl);
+		/**
+		 * Add Header with Content Type and Authentication Credentials
+		 */
+		post.setHeader("content-type", "application/xml; charset=UTF-8");
+		post.addHeader("Authorization", "Basic " + base64EncodedCredentials);
+
+		/**
+		 * Generate Entity from String
+		 */
+		StringEntity entity = new StringEntity(objString);
+		/**
+		 * This is the POST
+		 */
+		post.setEntity(entity);
+		/**
+		 * Get and show Response
+		 */
+		HttpResponse response = httpClient.execute(post);
+		/**
+		 * return content or throw expcetion (if http-state != 200)
+		 */
+		int HTTPState = response.getStatusLine().getStatusCode();
+		if (HTTPState == 200) {
+			return EntityUtils.toString(response.getEntity());
+		}
+		else {
+			String HTTPMsg = "HTTP-State " + HTTPState + ": "+ response.getStatusLine().getReasonPhrase();
+			throw new HttpException(HTTPMsg);
+		}
+	}
+
+
+	/**
+	 * GET Arraylist of Objects of type from JSONexport
+	 * export Controller is choosen on given type
+	 * available types are antibiotic, infectiondiagnosis, interventiontype, user, ward
+	 * 
+	 * @param credentials
+	 * @param type
+	 * 
+	 * TODO URL still hardcoded, change return from system.out to return
+	 */
+	public ArrayList<String> getAntibioticList(String credentials){
+		String myUrl = "http://10.0.2.2:8080/medi_abs/antibiotic/export";
+		JSONToObject myParser = new JSONToObject(getResponseString(myUrl,credentials));
+		System.out.println(myParser.getAntibioticList());
+		return myParser.getAntibioticList();
+	}
+	public ArrayList<InfectionDiagnosis> getInfectionDiagnosisList(String credentials){
+		String myUrl = "http://10.0.2.2:8080/medi_abs/infectionDiagnosis/export";
+		JSONToObject myParser = new JSONToObject(getResponseString(myUrl,credentials));
+		System.out.println(myParser.getInfectionDiagnosisList());
+		return myParser.getInfectionDiagnosisList();
+	}
+	public ArrayList<InterventionType> getInterventionTypeList(String credentials){
+		String myUrl = "http://10.0.2.2:8080/medi_abs/infectionDiagnosis/export";
+		JSONToObject myParser = new JSONToObject(getResponseString(myUrl,credentials));
+		System.out.println(myParser.getInterventionTypeList());
+		return myParser.getInterventionTypeList();
+	}
+	public ArrayList<User> getUserList(String credentials){
+		String myUrl = "http://10.0.2.2:8080/medi_abs/shiroUser/export";
+		JSONToObject myParser = new JSONToObject(getResponseString(myUrl,credentials));
+		System.out.println(myParser.getUserList());
+		return myParser.getUserList();
+	}
+	public ArrayList<Ward> getWardList(String credentials){
+		String myUrl = "http://10.0.2.2:8080/medi_abs/ward/export";	
+		JSONToObject myParser = new JSONToObject(getResponseString(myUrl,credentials));
+		System.out.println(myParser.getWardList());
+		return myParser.getWardList();
+	}	
+
+
+	/**
+	 * get Response String from GET request
+	 * 
+	 * @param url
+	 * @return
+	 */
+	public String getResponseString(String url,String credentials){
+		String responseStr = "";
+		try {
+			responseStr = getObject(url, credentials);
+		} catch (ConnectTimeoutException e) {
+			showErrorDialog(e.getMessage());
+		} catch (ClientProtocolException e) {
+			showErrorDialog(e.getMessage());				
+		} catch (IOException e) {
+			showErrorDialog(e.getMessage());
+		} catch (HttpException e) {
+			showErrorDialog(e.getMessage());		
+		}
+		return responseStr;
+	}
+
+	/**
+	 * get single JSON Object from export Controller
+	 * 
+	 * @param getUrl
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws HttpException
+	 * @throws ConnectTimeoutException
+	 */
+ 	public String getObject(String getUrl,String credentials) throws ClientProtocolException, IOException, HttpException, ConnectTimeoutException{
+		/**
+		 * Encode Authentication Credentials
+		 */
+		String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+		/**
+		 * Create HTTP Client and set timeout to 3sec
+		 */
+		HttpParams httpParameters = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+		HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+		HttpClient httpClient = new DefaultHttpClient(httpParameters);
+		HttpGet get= new HttpGet(getUrl);
+		/**
+		 * Add Header with Content Type and Authentication Credentials
+		 */
+		get.setHeader("content-type", "application/json; charset=UTF-8");
+		get.addHeader("Authorization", "Basic " + base64EncodedCredentials);	
+		/**
+		 * Get and show Response
+		 */
+		HttpResponse response = httpClient.execute(get);
+		HttpEntity entity = response.getEntity();	
+		/**
+		 * return content or throw exception (if http-state != 200)
+		 */
+		int HTTPState = response.getStatusLine().getStatusCode();
+		if (HTTPState == 200) {
+			return EntityUtils.toString(entity);
+		}
+		else {
+			String HTTPMsg = "HTTP-State " + HTTPState + ": "+ response.getStatusLine().getReasonPhrase();
+			throw new HttpException(HTTPMsg);
+		}
+	}
+
+ 	/**
+ 	 * Serialize given Object to XML String Data
+ 	 * 
+ 	 * @param myObject
+ 	 * @return
+ 	 */
+	public String serializeObject(Object myObject){
+		/**
+		 * Generate XML String from Object
+		 */
+		Serializer serializer = new Persister();
+		StringWriter myWriter = new StringWriter();
+		try {
+			serializer.write(myObject, myWriter);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		System.out.println(myWriter.toString());
+		return myWriter.toString();
+	}
+
+	/**
+	 * Show Android error
+	 * 
+	 * @param msg
+	 */
+	public void showErrorDialog(String msg) {
+		AlertDialog alertDialog = new AlertDialog.Builder(null).create();
+		alertDialog.setTitle("HttpException");
+		alertDialog.setMessage(msg);
+		alertDialog.setCancelable(true);
+		alertDialog.show();
+	}
+}

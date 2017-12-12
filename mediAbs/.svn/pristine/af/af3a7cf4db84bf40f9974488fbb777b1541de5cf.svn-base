@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- <LinearLayout -->
+    <!-- android:layout_width="321dp" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:orientation="vertical" > -->
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow android:layout_marginTop="5dp" >
+
+            <TextView
+                android:id="@+id/wardTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="@string/ward" />
+
+            <TextView
+                android:id="@+id/inputWardTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="@string/inputWard"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+        <!-- Patient's information -->
+
+        <TableRow
+            android:layout_marginTop="5dp"
+            android:background="@drawable/blue_background" >
+
+            <TextView
+                android:id="@+id/patientTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/patient" />
+
+            <!-- android:layout_toRightOf="@+id/patientTextField" -->
+
+            <TextView
+                android:id="@+id/inputPatientTexField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:text="@string/inputPatient" />
+        </TableRow>
+
+        <TableRow android:background="@drawable/blue_background" >
+
+            <TextView
+                android:id="@+id/birthdayTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:text="@string/birthday" />
+
+            <TextView
+                android:id="@+id/inputBirthdayTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_weight="1"
+                android:text="@string/inputBirthday" />
+        </TableRow>
+
+        <TableRow android:background="@drawable/blue_background" >
+
+            <TextView
+                android:id="@+id/genderTextField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:text="@string/inputGender" />
+
+            <TextView
+                android:id="@+id/inputGenderTextField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_weight="1"
+                android:text="@string/femGender" />
+
+            <Button
+                android:id="@+id/editPatientButton"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="25dp"
+                android:background="@drawable/rounded_button"
+                android:text="@string/editPatientButton"
+                android:textSize="12sp" />
+        </TableRow>
+
+        <Button
+            android:id="@+id/diagnosisButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/diagnosis" />
+
+        <TextView
+            android:id="@+id/antibioticTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/antibiotic"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TableRow
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:id="@+id/previousTreatmentTextField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/previousTreatment" />
+
+            <CheckBox
+                android:id="@+id/previousTreatmentCheckBoxYes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/yes" />
+
+            <CheckBox
+                android:id="@+id/previousTreatmentCheckBoxNo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/no" />
+        </TableRow>
+
+        <TextView
+            android:id="@+id/doctorsResumeTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:text="@string/doctorsResume" />
+
+        <TableRow android:layout_marginLeft="10dp" >
+
+            <Button
+                android:id="@+id/medicine0Button"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="@string/medicament" />
+
+            <TextView
+                android:id="@+id/doctorsResumeSymbol0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:text="@string/unkn" />
+        </TableRow>
+
+        <TableRow android:layout_marginLeft="10dp" >
+
+            <Button
+                android:id="@+id/medicine1Button"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="@string/medicament" />
+
+            <TextView
+                android:id="@+id/doctorsResumeSymbol1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:text="@string/unkn" />
+        </TableRow>
+
+        <TableRow android:layout_marginLeft="10dp" >
+
+            <Button
+                android:id="@+id/medicine2Button"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_button"
+                android:text="@string/medicament" />
+
+            <TextView
+                android:id="@+id/doctorsResumeSymbol2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:text="@string/unkn"/>
+        </TableRow>
+
+        <Button
+            android:id="@+id/microBiologyButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_button"
+            android:text="@string/microBiology" />
+
+        <TableRow
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp" >
+
+            <TextView
+                android:id="@+id/absCaregivingStateTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="50dp"
+                android:text="@string/absCaregivingState" />
+
+            <CheckBox
+                android:id="@+id/absCaregivingCheckBoxYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/yes" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginTop="20dp"
+            android:background="@drawable/blue_background" >
+        </TableRow>
+
+        <View android:layout_height="20dip" />
+        <!-- android:background="#FFFFFF" -->
+    </TableLayout>
+    <!-- </LinearLayout> -->
+
+</ScrollView>

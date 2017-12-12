@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                       Application.index
+
+GET		/events/{id}							Events.showEvent
+GET		/allevents								EventTypes.showAllEventTypes
+GET		/events/								Events.showAllEvents
+GET		/eventtyp/{eventType}					EventTypes.showEventType
+GET		/thema/{topic}							Topics.showTopic
+
+GET		/quiz/									Questionnaires.showQuestionnaire
+
+GET		/aufgaben/								Tasks.showAllTasks
+
+GET		/gallerie/								GalleryOverview.showGalleryOverview
+
+GET 	/captcha								Questionnaires.captcha
+
+GET		/artikel/{id}							Articles.showArticle
+
+# Ignore favicon requests
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
+
+# Administration
+*       /admin              					module:crud
+
+# Import Secure routes
+*       /                                       module:secure

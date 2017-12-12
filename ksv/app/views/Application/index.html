@@ -1,0 +1,144 @@
+#{extends 'main.html' /} #{set title:'Kamerunischer Studentenverein
+Kiel' /}
+<link rel="stylesheet" href="public/stylesheets/jquery-ui.css">
+<!--
+
+-->
+<!-- main content -->
+<div class="container">
+	<div class="row mainbackground" id="center">
+		<div class="col-xs-5"></div>
+		<div class="col-xs-2">
+			<img class="middle" id="circle"
+				src="/public/images/circle.png">
+			<div class="textontop" id="circleText">
+				<h4>Nächste Veranstaltung:</h4>
+				<h3>
+					<a href="@{Events.showEvent(newestEvent.id)}")>${newestEvent.title}</a>
+				</h3>
+				<h5>${newestEvent.getStartDateAsString()}</h5>
+			</div>
+		</div>
+		<div class="col-xs-5">
+		<img class="img-responsive" id="rectangle"
+				src="/public/images/rectangle.png"/>
+			<div class="textontop" id="rectangleText">
+				<h1>Kamerun in Kiel.</h1>
+				<h4>Kamerunischer Studentenverein Kiel</h4>
+				<p><a href="mailto:ksv@gmail.de">ksv@gmail.com</a> – 0431/5584332</p>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-4 leftbackground" onclick="location.href='/quiz/';" id="left">
+		<img class="" id="rectangleSmallLeft"
+				src="/public/images/rectanglesm.png"/>
+			<div class="textontop" id="leftText">
+				<h4>Gewinne Freikarten!</h4>
+			</div>
+		</div>
+		
+		<div class="col-xs-4 middlebackground" onclick="location.href='@{Topics.showTopic("Verein")}';" id="middle">
+				<img class="" id="rectangleSmallMiddle"
+				src="/public/images/rectanglesm.png"/>
+			<div class="textontop" id="middleText">
+				<h4>Über den Verein</h4>
+			</div>
+		</div>
+		<div class="col-xs-4 rightbackground" onclick="location.href='@{Topics.showTopic("Land")}';" id="right">
+		<img class="" id="rectangleSmallRight"
+				src="/public/images/rectanglesm.png"/>
+			<div class="textontop" id="rightText">
+				<h4>Über Kamerun</h4>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript"
+	src="/public/javascripts/jquery-ui.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#circle").position({
+		   my: "center",
+		   at: "center",
+		   of: "#center",
+		   collision: 'none'
+		});
+});
+$(document).ready(function(){
+	$("#circleText").position({
+		   my: "center",
+		   at: "center",
+		   of: "#center",
+		   collision: 'none'
+		});
+});
+$(document).ready(function(){
+	$("#rectangle").position({
+		   my: "right bottom",
+		   at: "right-20 bottom-10",
+		   of: "#center",
+		   collision: 'none'
+		   
+		});
+});
+$(document).ready(function(){
+	$("#rectangleText").position({
+		   my: "center",
+		   at: "center+40 center-5",
+		   of: "#rectangle",
+		   collision: 'none'
+		});
+});
+$(document).ready(function(){
+	$("#rectangleSmallLeft").position({
+		   my: "right bottom",
+		   at: "right-20 bottom-10",
+		   of: "#left",
+		   collision: 'none'
+		});
+});
+$(document).ready(function(){
+	$("#leftText").position({
+		   my: "left",
+		   at: "left+15",
+		   of: "#rectangleSmallLeft",
+		   collision: 'none'
+		});
+});
+
+$(document).ready(function(){
+	$("#rectangleSmallMiddle").position({
+		   my: "left bottom",
+		   at: "left+10 bottom-10",
+		   of: "#middle",
+		   collision: 'none'
+		});
+});
+$(document).ready(function(){
+	$("#middleText").position({
+		   my: "left",
+		   at: "left+15",
+		   of: "#rectangleSmallMiddle",
+		   collision: 'none'
+		});
+});
+$(document).ready(function(){
+	$("#rectangleSmallRight").position({
+		   my: "left bottom",
+		   at: "left+10 bottom-10",
+		   of: "#right",
+		   collision: 'none'
+		   
+		});
+});
+$(document).ready(function(){
+	$("#rightText").position({
+		   my: "left",
+		   at: "left+15",
+		   of: "#rectangleSmallRight",
+		   collision: 'none'
+		});
+});
+</script>

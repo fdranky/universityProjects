@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".EditPatientActivity" >
+
+    <TextView
+        android:id="@+id/wardTextField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/antibioNoTextView"
+        android:layout_below="@+id/antibioNoTextView"
+        android:layout_marginTop="30dp"
+        android:text="@string/inputPatient" />
+
+    <TextView
+        android:id="@+id/antibioNoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="18dp"
+        android:text="@string/patientData"
+        android:background="@drawable/blue_background"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/desciptionEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/wardTextField"
+        android:layout_toRightOf="@+id/antibioNoTextView"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/wardTextField"
+        android:layout_below="@+id/wardTextField"
+        android:layout_marginTop="46dp"
+        android:text="@string/birthday" />
+
+    <EditText
+        android:id="@+id/birthdayEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_alignLeft="@+id/desciptionEditText"
+        android:ems="10"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_centerVertical="true"
+        android:text="@string/inputGender" />
+
+    <CheckBox
+        android:id="@+id/maskulinCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignLeft="@+id/birthdayEditText"
+        android:text="@string/maskGender" />
+
+    <CheckBox
+        android:id="@+id/femininCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/maskulinCheckBox"
+        android:layout_below="@+id/maskulinCheckBox"
+        android:layout_marginTop="29dp"
+        android:text="@string/femGender" />
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="51dp"
+        android:background="@drawable/rounded_button"
+        android:text="@string/ok" />
+
+</RelativeLayout>

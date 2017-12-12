@@ -1,0 +1,314 @@
+package com.example.mediabs;
+
+import java.util.ArrayList;
+import android.widget.CheckBox;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import logic.Checklist;
+import logic.Patient;
+import logic.Antibiotic;
+
+public class ChecklistActivity extends Activity {
+
+	private String ward;
+	private String patientDes;
+	private String genderStr;
+	private Update updateData;
+	private Button medicine0Button;
+	private Button medicine1Button;	
+	private Button medicine2Button;
+	private Button editPatientButton;
+	private Button diagnosisButton;
+	private Button microbioButton;
+	private Button timePauseButton;
+	private Checklist checklist;
+	private CheckBox absstateCheckBox;
+	private CheckBox prevTrCheckYes;
+	private CheckBox prevTrCheckNo;
+
+	/**
+	 * initialisize views with ids
+	 */
+	private void init(){
+		
+		timePauseButton   = (Button) findViewById(R.id.timePauseButton);
+		microbioButton 	  = (Button) findViewById(R.id.microBiologyButton);
+		editPatientButton = (Button) findViewById(R.id.editPatientButton);
+		diagnosisButton   = (Button) findViewById(R.id.diagnosisButton);
+		medicine0Button   = (Button)findViewById(R.id.medicine0Button);
+		medicine1Button   = (Button)findViewById(R.id.medicine1Button);
+		medicine2Button   = (Button)findViewById(R.id.medicine2Button);
+		absstateCheckBox  = (CheckBox) (findViewById(R.id.absCaregivingCheckBoxYes));
+		prevTrCheckYes    = (CheckBox) (findViewById(R.id.previousTreatmentCheckBoxYes));
+		prevTrCheckNo     = (CheckBox) (findViewById(R.id.previousTreatmentCheckBoxNo));
+	}
+	
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_checklist);
+
+		// get interface data from database
+		//final Update u = (Update) this.getApplication();
+		updateData = (Update) this.getApplication();
+		// update_checklist = updateData.getChecklist();
+		init();
+		Intent lastScreen = getIntent();
+		ward = lastScreen.getStringExtra("ward");
+		patientDes = lastScreen.getStringExtra("patient");
+
+		// set wardview
+		TextView wtv = (TextView) (findViewById(R.id.inputWardTextField));
+		wtv.setText(ward);
+
+		// get owner
+		final Patient pat = updateData.findPatByName(patientDes);
+
+		// set views from owner data
+		TextView iptv = (TextView) (findViewById(R.id.inputPatientTexField));
+		iptv.setText(patientDes);
+
+		TextView ibtv = (TextView) (findViewById(R.id.inputBirthdayTextField));
+		ibtv.setText(String.valueOf(pat.getBirthday()));
+
+		TextView igtv = (TextView) (findViewById(R.id.inputGenderTextField));
+		if (pat.getGender().equals("f")) {
+			genderStr = "weibl.";
+		} else
+			genderStr = "m�nnl.";
+
+		igtv.setText(genderStr);
+		System.out.println(updateData.getChecklistList().toString());
+
+//		final CheckBox absstateCheckBox = (CheckBox) (findViewById(R.id.absCaregivingCheckBoxYes));
+
+		if (pat.isAbsCareGivingState()) {
+			absstateCheckBox.setChecked(pat.isAbsCareGivingState());
+		}
+
+		absstateCheckBox.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (absstateCheckBox.isChecked()) {
+					pat.setAbsCareGivingState(true);
+				} else {
+					pat.setAbsCareGivingState(false);
+				}
+				// debug output
+				System.out.println(pat.isAbsCareGivingState());
+			}
+		});
+
+		// Checklist
+		for (Checklist checkl : updateData.getChecklistList()) {
+			if (checkl.getOwner().equals(patientDes)) {
+				checklist = checkl;
+			}
+		}
+		
+		if (checklist == null) {
+			checklist = new Checklist(false, patientDes, "unbekannt",
+					updateData.getCurrentUserName(), updateData.getActualRound(),
+					updateData.getCurrentDate(), new ArrayList<Antibiotic>(), null);
+			updateData.addCheckList(checklist);
+			System.out.println(updateData.getChecklistList().toString());
+
+		}
+
+		// debug output
+		System.out.println(checklist.getMicroBio());
+
+		// Set previous-treatment checkbox
+		//CheckBox prevTrCheckYes = (CheckBox) (findViewById(R.id.previousTreatmentCheckBoxYes));
+		//CheckBox prevTrCheckNo = (CheckBox) (findViewById(R.id.previousTreatmentCheckBoxNo));
+		if (checklist.isPreviousTreatment()) {
+			prevTrCheckYes.setChecked(true);
+		} else {
+			prevTrCheckNo.setChecked(true);
+		}
+
+		// Buttons
+//		Button editPatientButton = (Button) findViewById(R.id.editPatientButton);
+
+		editPatientButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+
+				// Neues Intent anlegen
+				Intent toEditScreen = new Intent(getApplicationContext(),
+						EditPatientActivity.class);
+				toEditScreen.putExtra("ward", ward);
+				toEditScreen.putExtra("patientExist", patientDes);
+				startActivity(toEditScreen);
+			}
+		});
+
+//		Button diagnosisButton = (Button) findViewById(R.id.diagnosisButton);
+		diagnosisButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+
+				// Neues Intent anlegen
+				Intent toDiagnosisScreen = new Intent(getApplicationContext(),
+						DiagnosticsActivity.class);
+				toDiagnosisScreen.putExtra("patName", patientDes);
+				startActivity(toDiagnosisScreen);
+			}
+		});
+
+		//Button microbioButton = (Button) findViewById(R.id.microBiologyButton);
+		microbioButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+
+				// Neues Intent anlegen
+				Intent toMicrobioScreen = new Intent(getApplicationContext(),
+						MicrobiologyActivity.class);
+				toMicrobioScreen.putExtra("patName", patientDes);
+				startActivity(toMicrobioScreen);
+			}
+		});
+
+//		Button timePauseButton = (Button) findViewById(R.id.timePauseButton);
+		timePauseButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(updateData.isChronometerRunning() == true && updateData.isPausedState() == false) 
+					updateData.chronoPauseStop(getApplicationContext());
+				else if(updateData.isChronometerRunning() == false && updateData.isPausedState() == true)
+					updateData.chronoPauseStart(getApplicationContext());
+				else if(updateData.isChronometerRunning() == false && updateData.isPausedState() == false)
+					Toast.makeText(getApplicationContext(), "Bitte den Timer starten!", Toast.LENGTH_LONG).show();
+			}
+
+		});
+		
+		/*
+		 * buttonListener(R.id.editMedicine0Button);
+		 * 
+		 * buttonListener(R.id.editMedicine1Button);
+		 * buttonListener(R.id.editMedicine2Button);
+		 */
+		buttonListener(R.id.medicine0Button, "0", patientDes);
+		buttonListener(R.id.medicine1Button, "1", patientDes);
+		buttonListener(R.id.medicine2Button, "2", patientDes);
+
+		checkBoxListener();
+		createButtonTexts();
+	}
+
+	/**
+	 * previous treatment chechbox listener - makes sure that only one checkbox
+	 * is checked
+	 */
+	private void checkBoxListener() {
+
+	//	final CheckBox checkBoxYes = (CheckBox) findViewById(R.id.previousTreatmentCheckBoxYes);
+	//	final CheckBox checkBoxNo = (CheckBox) findViewById(R.id.previousTreatmentCheckBoxNo);
+
+		prevTrCheckYes.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (prevTrCheckYes.isChecked()) {
+					checklist.setPreviousTreatment(true);
+					prevTrCheckNo.setChecked(false);
+				}
+				System.out.println("in checklist YES");
+
+			}
+		});
+		prevTrCheckNo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (prevTrCheckNo.isChecked()) {
+					checklist.setPreviousTreatment(false);
+					prevTrCheckYes.setChecked(false);
+				}
+				System.out.println("in checklist NO");
+
+			}
+		});
+
+	}
+
+	private void buttonListener(int idButton, final String buttonNo,
+			final String patientDes) {
+
+		Button medicineButton = (Button) findViewById(idButton);
+		medicineButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				System.out.println("in onclickbutton");
+				Intent toAntibioticScreen = new Intent(getApplicationContext(),
+						EditAntibioticActivity.class);
+
+				toAntibioticScreen.putExtra("ButtonNo", buttonNo);
+				toAntibioticScreen.putExtra("PatientDes", patientDes);
+				startActivity(toAntibioticScreen);
+			}
+		});
+
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+
+		/** write checklist data back to database */
+		Log.w("lel", "onPause() aufgerufen - speichere Checklisten.");
+		final Update u = (Update) this.getApplication();
+		u.storeChecklists(this);
+
+		// /** write patient data back to database */
+		// u.storePatients(this);
+
+	}
+	public void createButtonTexts(){
+
+		Log.v("in createButtonTexts ", "IN createButtonTexts");		
+		Log.v("checklist.getOwner()", checklist.getOwner());
+		
+		// first medicine Button	
+		if(checklist.getAntibioticList().size() > 0 &&
+				!checklist.getAntibioticList().get(0).getName().isEmpty()){
+			
+			Log.v("medicine0Button ", checklist.getAntibioticList().get(0).getName());
+			medicine0Button.setText(checklist.getAntibioticList().get(0).getName());
+		}
+		
+		Log.v("getAntibioticList SIZE ", "getAntibioticList SIZE");
+		System.out.println(	"getAntibioticList SIZE");
+		System.out.println(	checklist.getAntibioticList().size() );
+
+		// second medicine Button
+		if(checklist.getAntibioticList().size() > 1 &&
+				!checklist.getAntibioticList().get(1).getName().isEmpty()){
+
+			Log.v("medicine1Button ", checklist.getAntibioticList().get(1).getName());
+			medicine1Button.setText(checklist.getAntibioticList().get(1).getName());
+		}
+		// third medicine Button
+		if(checklist.getAntibioticList().size() > 2 &&
+				!checklist.getAntibioticList().get(2).getName().isEmpty()){
+			Log.v("medicine2Button ", checklist.getAntibioticList().get(2).getName());
+			medicine2Button.setText(checklist.getAntibioticList().get(2).getName());
+		}
+	}
+
+	@Override
+	public void onResume()
+	{
+	 Log.v("Resuming", "Resuming in checkbox");
+	 super.onResume();
+	 createButtonTexts();	  
+	}
+
+}

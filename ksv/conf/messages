@@ -1,0 +1,20 @@
+# You can specialize this file for each language.
+# For example, for French create a messages.fr file
+#
+
+name=Name
+emailAddress=Email adress
+password=Password
+
+AdminArticles=Articles Interface
+AdminEvents=Events Interface
+AdminEventTypes=EventTypes Interface
+AdminGalleries=Galleries Interface
+AdminMembers=Members Interface
+AdminQuestionnaires=Questionnaires Interface
+AdminTopics=Topic Interface
+AdminParticipants=Participants Interface
+AdminQuestions=Question Interface
+AdminTasks=Task Interface
+
+crud.list.title=&{%s}

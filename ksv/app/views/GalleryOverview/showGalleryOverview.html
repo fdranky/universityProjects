@@ -1,0 +1,22 @@
+#{extends 'main.html' /}
+#{set title:'Bildergalerie' /}
+
+<div class="container">
+<div class="row">
+<br>
+#{list items:galleries, as:'gallery'}
+            <div class="col-xs-3">
+            #{list items:gallery.images, as:'image'}	
+            #{if image_isFirst}			
+				<a class="thumbnail" href="@{Galleries.showGallery(gallery.id)}">
+				<img src="${gallery.address}thumbnails/${image.fileName}" width="180" height="180" class = ""></a>
+				<div class="caption">
+			<h3>${gallery.name}</h3>
+				</div>
+			#{/if}
+			#{/list}
+            </div>
+#{/list}
+</div>
+</div>
+

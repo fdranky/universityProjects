@@ -1,0 +1,300 @@
+package connection;
+
+import java.util.Calendar;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+public class MySQLiteHelper extends SQLiteOpenHelper {
+
+	public static final String TABLE_USER = "users";
+	public static final String USER_NAME = "name";
+	public static final String USER_PASSWORD = "password";
+
+	public static final String TABLE_WARD = "wards";
+	public static final String WARD_NUMBER = "number";
+	public static final String WARD_NAME = "name";
+
+	public static final String TABLE_PATIENT = "patients";
+	public static final String PATIENT_DESCRIPTION = "description";
+	public static final String PATIENT_BIRTHDAY = "birthday";
+	public static final String PATIENT_GENDER = "gender";
+	public static final String PATIENT_STATE = "state";
+	public static final String PATIENT_WARD = "patientWard";
+	
+	public static final String TABLE_CHECKLIST = "checklist";
+	public static final String CHECKLIST_PRETREATMENT = "preTreatment";
+	public static final String CHECKLIST_OWNER = "checklistowner";
+	public static final String CHECKLIST_MICROBIO = "microbio";
+	public static final String CHECKLIST_AUTHOR = "author";
+	public static final String CHECKLIST_ROTATION = "rotation";
+	public static final String CHECKLIST_WARDROUNDDATE = "wardRounddate";
+	public static final String CHECKLIST_DIAGNOSIS = "diagnosis";
+	
+	public static final String TABLE_ANTIBIOTIC = "antibiotic";
+	public static final String ANTIBIOTIC_OWNER = "owner";
+	public static final String ANTIBIOTIC_NAME = "name";
+	public static final String ANTIBIOTIC_DOSAGE = "dosage";
+	public static final String ANTIBIOTIC_PERIOD = "periode";
+	public static final String ANTIBIOTIC_IVPO = "ivPo";
+	public static final String ANTIBIOTIC_COMMENT = "comment";
+	public static final String ANTIBIOTIC_PROPHTHER = "prophTher";
+	public static final String ANTIBIOTIC_INTERVENTION = "intervention";
+	public static final String ANTIBIOTIC_RESUME = "resume";
+	
+	public static final String TABLE_INTERVENTIONTYPES = "interventionTypes";
+	public static final String INTERVENTIONTYPES_TITLE = "interventionTypesTitle";
+	
+	public static final String TABLE_ANTIBIOTICTITLE = "antibioticTable";
+	public static final String ANTIBIOTIC_TITLE = "antibioticTitle";
+	
+	public static final String TABLE_DOSAGE = "dosageTable";
+	public static final String DOSAGE_TITLE = "dosageTitle";
+
+	public static final String TABLE_TIMER= "timerData";
+	public static final String TIMER_ROTATION = "rotation";
+	public static final String TIMER_USER = "user";
+	public static final String TIMER_DURATION = "duration";
+	public static final String TIMER_WARD = "ward";
+
+	
+	private static final String DATABASE_NAME = "mediabs";
+	private static final int DATABASE_VERSION = 1;
+
+	// Database creation sql statement
+	private static final String WARD_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_WARD
+			+ "("
+			+ WARD_NUMBER
+			+ " integer primary key, "
+			+ WARD_NAME + " text not null);";
+
+	private static final String PATIENT_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_PATIENT
+			+ "("
+			+ PATIENT_DESCRIPTION
+			+ " text not null, "
+			+ PATIENT_BIRTHDAY
+			+ " int not null, "
+			+ PATIENT_GENDER
+			+ " text not null, "
+			+ PATIENT_STATE
+			+ " int not null, "
+			+ PATIENT_WARD + " int not null);";
+
+	private static final String USER_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_USER
+			+ "("
+			+ USER_NAME
+			+ " text primary key not null, "
+			+ USER_PASSWORD + " text not null); ";
+	
+	private static final String CHECKLIST_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_CHECKLIST
+			+ "("
+			+ CHECKLIST_PRETREATMENT
+			+ " int not null, "
+			+ CHECKLIST_OWNER
+			+ " text not null, "
+			+ CHECKLIST_MICROBIO
+			+ " text not null, "
+			+ CHECKLIST_AUTHOR
+			+ " text not null, "
+			+ CHECKLIST_ROTATION
+			+ " int not null, "
+			+ CHECKLIST_WARDROUNDDATE
+			+ " int not null, "
+			+ CHECKLIST_DIAGNOSIS
+			+ " text"
+			+ "); ";
+	
+	private static final String ANTIBIOTIC_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_ANTIBIOTIC
+			+ "("
+			+ ANTIBIOTIC_OWNER
+			+ " text not null, "
+			+ ANTIBIOTIC_NAME
+			+ " text not null, "
+			+ ANTIBIOTIC_DOSAGE
+			+ " int not null, " 
+			+ ANTIBIOTIC_PERIOD
+			+ " int not null, "
+			+ ANTIBIOTIC_IVPO
+			+ " text not null, "
+			+ ANTIBIOTIC_COMMENT
+			+ " text, "
+			+ ANTIBIOTIC_PROPHTHER
+			+ " text, "
+			+ ANTIBIOTIC_INTERVENTION
+			+ " text, "
+			+ ANTIBIOTIC_RESUME
+			+ " text);";
+	
+	private static final String ANTIBIOTICTABLE_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_ANTIBIOTICTITLE
+			+ "("
+			+ ANTIBIOTIC_TITLE
+			+ " text not null "
+			+ ");";
+	
+	private static final String INTERVENTIONTYPES_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_INTERVENTIONTYPES
+			+ "("
+			+ INTERVENTIONTYPES_TITLE
+			+ " text not null "
+			+ ");";
+	
+	private static final String DOSAGE_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_DOSAGE
+			+ "("
+			+ DOSAGE_TITLE
+			+ " text not null "
+			+ ");";
+	
+	private static final String TIMER_DATABASE_CREATE = "create table if not exists "
+			+ TABLE_TIMER
+			+ "("
+			+ TIMER_ROTATION
+			+ " integer, "
+			+ TIMER_USER + " text not null,"
+			+ TIMER_DURATION + " int,"
+			+ TIMER_WARD + " int);";
+
+	public MySQLiteHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase database) {
+		Log.w("lel", "Datenbank-Tabellen werden erstellt...");	// TODO: Log entfernen
+		database.execSQL(WARD_DATABASE_CREATE);
+		database.execSQL(PATIENT_DATABASE_CREATE);
+		database.execSQL(USER_DATABASE_CREATE);
+		database.execSQL(CHECKLIST_DATABASE_CREATE);
+		database.execSQL(ANTIBIOTIC_DATABASE_CREATE);
+		database.execSQL(ANTIBIOTICTABLE_DATABASE_CREATE);
+		database.execSQL(INTERVENTIONTYPES_DATABASE_CREATE);
+		database.execSQL(DOSAGE_DATABASE_CREATE);
+		database.execSQL(TIMER_DATABASE_CREATE);
+		
+		Log.w("lel", "Erstelle Tabelle: "+CHECKLIST_DATABASE_CREATE);
+		insertSampleData(database);
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w(MySQLiteHelper.class.getName(),
+				"Upgrading database from version " + oldVersion + " to "
+						+ newVersion + ", which will destroy all old data");
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_WARD);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PATIENT);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKLIST);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ANTIBIOTIC);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_ANTIBIOTICTITLE);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERVENTIONTYPES);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_DOSAGE);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TIMER);
+		onCreate(db);
+	}
+
+	public void insertSampleData(SQLiteDatabase database) {
+		ContentValues wardValues = new ContentValues();
+		ContentValues patientValues = new ContentValues();
+		ContentValues userValues = new ContentValues();
+		ContentValues checklistValues = new ContentValues();
+		ContentValues antibioticValues = new ContentValues();
+		ContentValues antibioticTitleValues = new ContentValues();
+		ContentValues interventionTypeValues = new ContentValues();
+		ContentValues dosageTitleValues = new ContentValues();
+		ContentValues timerValues = new ContentValues();
+		
+
+		wardValues.put(WARD_NUMBER, 1);
+		wardValues.put(WARD_NAME, "Intensiv");
+		database.insertOrThrow("wards", null, wardValues);
+
+		wardValues.put(WARD_NUMBER, 2);
+		wardValues.put(WARD_NAME, "Kardiologie");
+		database.insertOrThrow("wards", null, wardValues);
+
+		patientValues.put(PATIENT_DESCRIPTION, "HPB");
+		patientValues.put(PATIENT_BIRTHDAY, 20130917);
+		patientValues.put(PATIENT_GENDER, "m");
+		patientValues.put(PATIENT_WARD, 1);
+		patientValues.put(PATIENT_STATE, true);
+		database.insertOrThrow("patients", null, patientValues);
+
+		patientValues.put(PATIENT_DESCRIPTION, "ABBA");
+		patientValues.put(PATIENT_BIRTHDAY, 19960920);
+		patientValues.put(PATIENT_GENDER, "f");
+		patientValues.put(PATIENT_WARD, 2);
+		patientValues.put(PATIENT_STATE, false);
+		database.insertOrThrow("patients", null, patientValues);
+		
+		
+		checklistValues.put(CHECKLIST_PRETREATMENT, false);
+		checklistValues.put(CHECKLIST_OWNER, "HPB");
+		checklistValues.put(CHECKLIST_MICROBIO, "Angefordert");
+		checklistValues.put(CHECKLIST_AUTHOR, "team");
+		checklistValues.put(CHECKLIST_ROTATION, 1);
+		checklistValues.put(CHECKLIST_WARDROUNDDATE, 20130917);
+		checklistValues.put(CHECKLIST_DIAGNOSIS, "Sepsis,HWI");
+		database.insertOrThrow("checklist", null, checklistValues);
+		
+		antibioticValues.put(ANTIBIOTIC_OWNER, "HPB");
+		antibioticValues.put(ANTIBIOTIC_NAME, "Amoxicillin");
+		antibioticValues.put(ANTIBIOTIC_DOSAGE, 100);
+		antibioticValues.put(ANTIBIOTIC_PERIOD, 10);
+		antibioticValues.put(ANTIBIOTIC_IVPO, "iv");
+		antibioticValues.put(ANTIBIOTIC_COMMENT, "comment");
+		antibioticValues.put(ANTIBIOTIC_PROPHTHER, "pro");
+		antibioticValues.put(ANTIBIOTIC_INTERVENTION, "Eskalation,Fokussuche");
+		antibioticValues.put(ANTIBIOTIC_RESUME, "yes");
+		database.insertOrThrow("antibiotic", null, antibioticValues);
+		
+		antibioticTitleValues.put(ANTIBIOTIC_TITLE, "Amoxicillin");
+		database.insertOrThrow("antibioticTable", null, antibioticTitleValues);
+		
+		interventionTypeValues.put(INTERVENTIONTYPES_TITLE, "Eskalation");
+		database.insertOrThrow("interventionTypes", null, interventionTypeValues);
+		interventionTypeValues.put(INTERVENTIONTYPES_TITLE, "Fokussuche");
+		database.insertOrThrow("interventionTypes", null, interventionTypeValues);
+		
+		dosageTitleValues.put(DOSAGE_TITLE, "CAP");
+		database.insertOrThrow("dosageTable", null, dosageTitleValues);
+		dosageTitleValues.put(DOSAGE_TITLE, "HAP");
+		database.insertOrThrow("dosageTable", null, dosageTitleValues);
+		dosageTitleValues.put(DOSAGE_TITLE, "HWI");
+		database.insertOrThrow("dosageTable", null, dosageTitleValues);
+		
+		timerValues.put(TIMER_ROTATION, 1);
+		timerValues.put(TIMER_USER, "team");
+		timerValues.put(TIMER_DURATION, 5);
+		timerValues.put(TIMER_WARD, 1);
+		database.insertOrThrow("timerData", null, timerValues);
+		timerValues.put(TIMER_ROTATION, 1);
+		timerValues.put(TIMER_USER, "team");
+		timerValues.put(TIMER_DURATION, 14);
+		timerValues.put(TIMER_WARD, 2);
+		database.insertOrThrow("timerData", null, timerValues);
+		timerValues.put(TIMER_ROTATION, 2);
+		timerValues.put(TIMER_USER, "team");
+		timerValues.put(TIMER_DURATION, 21);
+		timerValues.put(TIMER_WARD, 1);
+		database.insertOrThrow("timerData", null, timerValues);
+
+		userValues.put(USER_NAME, "team");
+		userValues.put(USER_PASSWORD,
+						"ca8b22d0db83a22db163b560b3e4e51527e533d31d067b614a0c33c4d2df8432"); // SHA256-Hash
+																								// of
+																								// "team"
+		database.insertOrThrow(TABLE_USER, null, userValues);
+		
+		//
+	}
+
+}

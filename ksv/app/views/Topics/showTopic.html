@@ -1,0 +1,29 @@
+#{extends 'main.html' /}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-9">
+			#{list items:articles, as:'article'} #{set title:article.topic /}
+			<div class="row">
+				<div class="col-xs-12">
+					<a name="${article.title}">
+						<h3>${article.title}</h3>
+					</a>
+					<p>#{verbatim}${article.content}#{/verbatim}</p>
+					#{ifnot article_isLast}
+					<div class="border-row"></div>
+					#{/ifnot}
+				</div>
+			</div>
+			#{/list}
+
+		</div>
+		<div class="col-xs-3">
+			<h4>Finde Informationen zu:</h4>
+			#{list items:articles, as:'article'}
+			<p>
+				<a href="#${article.title}">${article.title}</a>
+			</p>
+			#{/list} #{include 'tags/sidebar.html' /}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,383 @@
+
+Topic(club):
+  topic: Verein
+  
+Topic(contact):
+  topic: Kontakt
+  
+Topic(history):
+  topic: Geschichte
+Topic(country):
+  topic: Land
+Topic(party):
+  topic: Party
+  
+Article(smart):
+  title: Übersicht        
+  content: '<div class="col-xs-4 img-responsive"> <img src="/public/images/ort.gif" class="img-responsive" /></div><dl class="col-xs-8 dl-horizontal"><dt>Hauptstadt:</dt><dd>Yaounde (population 2.5 million)</dd><dt>Einwohner:</dt><dd>20 million</dd><dt>Sprache:</dt><dd>Französisch, Englisch und viele lokale Sprachen</dd><dt>Währung:</dt><dd>XAF</dd><dt>Zeitzone:</dt><dd>(GMT+01:00) Westliches Zentralafrika</dd></dl>'
+  topic: country
+Article(smart4):
+  title: Wetter        
+  content: '<div class="row"><div class=" img-responsive"><img title="Cameroon weather chart" alt="Cameroon weather chart"src="/public/images/wetter.gif" class="img-responsive" /></div></div>'
+  topic: country
+Article(smart5):
+  title: Geographie        
+  content: '<div class="row"><div class="col-xs-4 img-responsive"><img title="Waterfall in the rainforest, Cameroon"alt="Waterfall in the rainforest, Cameroon"src="/public/images/waterfall.jpg" class="img-responsive" /></div><div class="col-xs-8">Kameruns Geographie hat alles: Wüsten, Strände, Regenwälder und Berge. Die nördlichen Ebenen, der ideale Ort, wilde Tiere zu beobachten, verschmelzen zu weiterhin aktiven Vulkanischen Höhen. Im Süden ist der Küstenabschnitt ein tropisches Paradies mit Prachtexemplaren von weiß- oder auch schwarzsandigen Stränden. Nachbarländer sind Nigeria, Chad, der Kongo undEquatorial Guniea.</div></div>'
+  topic: country
+Article(smart6):
+  title: Landschaft        
+  content: '<p>Wegen seiner unglaublichen <b>landschaftlichen</b> <b>Vielfalt</b>bezeichnet man Kamerun auch als &bdquo;Afrique en miniature&ldquo; (auf Deutsch Afrika in Miniatur oder im Kleinformat). Dieser Beiname Kameruns r&uuml;hrt daher, dass man hier einen Querschnitt durch alle Landschaftsbilder Afrikas bekommen kann; man findet hier Plateaus, Berge und sogar <b>Vulkane</b> (der Kamerun-Berg), aber gleichzeitig auch <b>Savannengebiete</b>, Seen und Regenwald. In Kamerun Urlaub zu machen beinhaltet also viele spannende M&ouml;glichkeiten, die verschiedenen typischen Landschaftsformen des gesamten Kontinents zu entdecken. Da Kamerun mit einer derart abwechslungsreichen Landschaft gute Lebensbedingungen f&uuml;r viele verschiedene Tierarten schafft, gibt es hier eine Fauna, die ihresgleichen sucht, denn so viele verschiedene und oft auch <b>seltene Tierarten</b> auf so engem Raum, findet man sonst kaum in Afrika.</p><p><img src="/public/images/dorf.jpg" alt="Kamerun" align="right"width="220" height="147" />Aber nicht nur landschaftlich bietetKamerun solche <b>Vielfalt</b>, auch in allen anderen Bereichen kannman erkennen, dass sich in Kamerun etliche verschiedene afrikanischeAspekte mischen. Man findet hier sehr viele verschiedeneVolksgruppen, die sich entweder in den modernen gr&ouml;&szlig;erenSt&auml;dten ansiedeln oder weiterhin in kleinen urspr&uuml;nglichenD&ouml;rfern leben. Die <b>Land in Kamerun</b> hat sich einespannende Vielfalt erhalten, die auch als Tourist entdeckenk&ouml;nnen. Das spiegelt sich auch in den Sprachen in Kamerunwieder. Offizielle <b>Amtssprachen</b> in Kamerun sind zwarFranz&ouml;sisch und Englisch, aber daneben spricht dieBev&ouml;lkerung in Kamerun noch eine Menge lokaler Sprachen undDialekte.</p>'
+  topic: country
+
+Article(smart1):
+  title: Interessante Sachen über Kamerun        
+  summary: Kamerun ist ein Land in Zentralafrika. Es grenzt an Nigeria, den Tschad, die Zentralafrikanische Republik, die Republik Kongo, Gabun, Äquatorialguinea und den Atlantischen Ozean durch die Bucht von Bonny.    
+  content: Das Landesinnere besteht vorwiegend aus flachen Plateaus, die sich nach Norden bis zum Adamaua-Hochland und dem Mandara-Gebirge erheben um dann allmählich zur Niederung des Tschadsees im äußersten Norden abfallen, an dem Kamerun noch kleinere Anteile hält. Der Westen und Nordwesten Kameruns ist von vulkanischem Gebirge entlang der Kamerunlinie bestimmt, das in Küstennähe vom aktiven Vulkan und der höchsten Erhebung Westafrikas, dem Kamerunberg, überragt wird. Entlang der Kamerunlinie erhebt sich das bis zu 3011 Meter hohe Vulkanfeld Oku, in dem der Nyos- und Manoun-See liegen. Das Vulkanfeld Oku liegt im Bamenda-Hochland, in dem die höchsten Gebirgsregenwälder Westafrikas liegen.[4] Die dritthöchste Erhebung Kameruns bildet das Bambouto-Massiv. Weitere bedeutende Berge des Kamerungebirges sind die heiligen Berge der Bakossi, der Manengouba und der Kupe.[5] Die Bakossi-Berge und der Manengouba bilden einen Biodiversitätshotspot.[6] Die südlichen Plateaus sind mit tropischem Regenwald bedeckt und senken sich zu breiten Ebenen in der Küstengegend ab.
+  topic: history
+Article(smart2):
+  title: Wir.     
+  content: <div class="container-fluid"><div align="right"><img src="/public/images/aboutus.jpg" align ="left" class="thumbnail add-margin" width="400" height="300"></div><h4>Wer seid ihr?</h4><ul><li>Eine fr&ouml;hliche Gruppe nicht nur aus Kamerunern und nicht nur aus Studenten!</li></ul><p>&nbsp;</p><h4>Was wollt ihr?</h4><ul><li>Kamerunern in Kiel ein Zuhause geben &ndash; Kamerun in Kiel zu Hause machen.</li></ul><p>&nbsp;</p><h4>Was macht ihr!</h4><ul><li>Wir treffen uns, informieren andere &uuml;ber Kamerun, feiern, helfen uns&hellip;</li></ul><p>&nbsp;</p><h4>Wie werde ich Mitglied?</h4><ul><li>Schreibe uns eine Email, ruf uns an, komm zur n&auml;chsten Veranstaltung oder triff uns auf dem Campus.</li></ul><p>&nbsp;</p><h4>Welche Voraussetzungen brauche ich?</h4><ul><li>Bei uns kann jeder Mitglied werden, egal ob Kameruner oder nicht, Student oder nicht!</li><li>Der Mitgliedsbeitrag ist derzeit bei 20 &euro; j&auml;hrlich.</li></ul></div>
+  topic: club
+Article(smart3):
+  title: Interessante Sachen über Kamerun        
+  summary: Kamerun ist ein Land in Zentralafrika. Es grenzt an Nigeria, den Tschad, die Zentralafrikanische Republik, die Republik Kongo, Gabun, Äquatorialguinea und den Atlantischen Ozean durch die Bucht von Bonny.    
+  content: Das Landesinnere besteht vorwiegend aus flachen Plateaus, die sich nach Norden bis zum Adamaua-Hochland und dem Mandara-Gebirge erheben um dann allmählich zur Niederung des Tschadsees im äußersten Norden abfallen, an dem Kamerun noch kleinere Anteile hält. Der Westen und Nordwesten Kameruns ist von vulkanischem Gebirge entlang der Kamerunlinie bestimmt, das in Küstennähe vom aktiven Vulkan und der höchsten Erhebung Westafrikas, dem Kamerunberg, überragt wird. Entlang der Kamerunlinie erhebt sich das bis zu 3011 Meter hohe Vulkanfeld Oku, in dem der Nyos- und Manoun-See liegen. Das Vulkanfeld Oku liegt im Bamenda-Hochland, in dem die höchsten Gebirgsregenwälder Westafrikas liegen.[4] Die dritthöchste Erhebung Kameruns bildet das Bambouto-Massiv. Weitere bedeutende Berge des Kamerungebirges sind die heiligen Berge der Bakossi, der Manengouba und der Kupe.[5] Die Bakossi-Berge und der Manengouba bilden einen Biodiversitätshotspot.[6] Die südlichen Plateaus sind mit tropischem Regenwald bedeckt und senken sich zu breiten Ebenen in der Küstengegend ab.
+  topic: contact
+  
+Gallery(gal1):
+  name: Schöne Bilder aus Kamerun
+  address: /public/images/gal1/
+  memberPrivate: false
+  images:
+    - img1
+    - img2
+    - img3
+  event:
+    - bigParty
+  
+Image(img1):
+  name: img1
+  fileName: img1.jpg
+  date: 1401613600000
+  comment: cool image
+  gallery: gal1
+  
+Image(img2):
+  name: img2
+  fileName: img2.jpg
+  date: 1401613700000
+  comment: cool image
+  gallery: gal1
+  
+Image(img3):
+  name: img3
+  fileName: img3.jpg
+  date: 1401613700000
+  comment: cool image
+  gallery: gal1
+Image(img4):
+  name: img4
+  fileName: img3.jpg
+  date: 1401613700000
+  comment: cool image
+  gallery: gal1
+Image(img5):
+  name: img5
+  fileName: img3.jpg
+  date: 1401613700000
+  comment: cool image
+  gallery: gal1
+  
+  
+
+  # Attention: At the moment all questions must have four answers
+  
+Question(where):
+  question: Weßhalb bezeichnet man Kamerun als "Afrique en miniature" (Afrika im Kleinformat)?
+  topic: country
+  answers: 
+    - there
+    - there1
+    - there2
+    - there3
+  questionnaire:
+    - difficultQuestions
+    
+Answer(there):
+  answer: Weil es ein sehr kleines Land ist!
+  correctAnswer: false
+  question: where
+Answer(there1):
+  answer: Weil man alle Landschaftsbilder erleben kann!
+  correctAnswer: true
+  question: where
+Answer(there2):
+  answer: Weil man in Kamerun nun mal spanisch spricht!
+  correctAnswer: false
+  question: where
+Answer(there3):
+  answer: Weil es so viele Kamerun-Miniaturen gibt!
+  correctAnswer: false
+  question: where
+  
+Question(where2):
+  question: Welche Sprachen werden in Kamerun gesprochen?
+  topic: country
+  answers: 
+    - here
+    - here1
+    - here2
+    - here3
+  questionnaire:
+    - difficultQuestions
+    
+Answer(here):
+  answer: Deutsch und Englisch!
+  correctAnswer: false
+  question: where2
+Answer(here1):
+  answer: Französisch und viele lokale Sprachen!
+  correctAnswer: false
+  question: where2
+Answer(here2):
+  answer: Spanisch!
+  correctAnswer: false
+  question: where2
+Answer(here3):
+  answer: Französisch, Englisch und viele lokale Sprachen und Dialekte!
+  correctAnswer: true
+  question: where2
+
+
+    
+
+
+Question(where4):
+  question: Wer kann in dem Kamerunischen Studentenverein Mitglied werden?
+  topic: club
+  answers: 
+    - here4
+    - here5
+    - here6
+    - here7
+  questionnaire:
+    - difficultQuestions
+Answer(here4):
+  answer: Nur Leute, die eingeladen werden.
+  correctAnswer: false
+  question: where4
+Answer(here5):
+  answer: Studenten der Uni Kiel.
+  correctAnswer: false
+  question: where4
+Answer(here6):
+  answer: Jeder.
+  correctAnswer: true
+  question: where4
+Answer(here7):
+  answer: Studenten der Uni Kiel mit kamerunischen Pass.
+  correctAnswer: false
+  question: where4  
+Questionnaire(difficultQuestions):
+  title: 
+  numberOfQuestions: 1
+  questions:
+    - where
+    - where2
+    - where4
+  events:
+    - bigParty
+    
+
+
+    
+Participant(bob):
+  emailAddress: k@k.de     
+  questionnaire: difficultQuestions
+
+EventType(party):
+  type: party
+EventType(info):
+  type: info
+  
+Article(partyDescription):
+  title: Black Culture Night!
+  content: Jedes Jahr veranstaltet der Kamerunische Studentenverein Kiel e. V. die kulturelle Gala „Black Culture Night“. Mit kulinarischen Spezialitäten, traditionellen Tanzvorführungen oder auch amüsanten Theaterstücken geht es am Samstag, 19. Juli, um 20 Uhr in der Mensa 1 der Christian-Albrechts-Universität zu Kiel (CAU) auf eine spannende Reise durch Kamerun. Eine Aftershow-Party mit afrikanischen Rhythmen schließt sich an. 
+  summary: Eine klasse Party!
+  topic: party
+Article(infoDescription):
+  title: Infoabend Kamerun!
+  content: An unseren regelmäßigen Info-Abenden haben Sie die Möglichkeit, sich über die Arbeit unseres Vereins und unser Land zu informieren. Sie sind sehr herzlich willkommen! 
+  summary: Eine klasse Party!
+  topic: party
+  
+Event(bigParty):
+  title: Black Culture Night
+  start: 1406401200000
+  end: 1406419200000
+  place: Mensa 1
+  eventType: party
+  questionnaires:
+    - difficultQuestions
+  gallery: gal1
+  article: partyDescription
+  tasks: 
+    - arbeit
+    - arbeit1
+    - arbeit2
+    - arbeit3
+    
+Member(admin):
+  emailAddress: admin@master.com
+  password: admin
+  isMember: true
+  isAdmin: true
+  
+Member(peter):
+  emailAddress: j@o.pe
+  password: peter
+  isMember: true
+  isAdmin: false
+  
+Member(member):
+  emailAddress: member@member.com
+  password: member
+  isMember: true
+  isAdmin: false
+
+Task(arbeit):
+  name: Getränke ausschenken.
+  enoughHelpers: false     
+  helpersNeeded: 1
+  description: Wir brauchen drei Leute am Getränke Ausschank! Selber trinken verboten. ;-) 
+  members: 
+    - peter
+  membersNotHelping:
+    - admin
+    - member
+  event: bigParty
+Task(arbeit1):
+  name: Kochen.
+  enoughHelpers: false     
+  helpersNeeded: 2
+  description: Talentierte Köche gesucht! Treffen um 19:00.
+  members: 
+    - admin
+    - peter
+  membersNotHelping:
+    - member
+  event: bigParty
+Task(arbeit2):
+  name: Aufräumer
+  members: 
+    - admin
+    - member
+  membersNotHelping:
+    - peter
+  enoughHelpers: false     
+  helpersNeeded: 1
+  description: Aufräumen am nächsten Tag ab 09:00
+  event: bigParty
+Task(arbeit3):
+  name: Kasse
+  members: 
+    - admin
+  membersNotHelping:
+    - peter
+    - member
+  enoughHelpers: false     
+  helpersNeeded: 3
+  description: Geld scheffeln an der Kasse.
+  event: bigParty
+    
+Event(info):
+  title: Info-Abend
+  start: 1406566800000
+  end: 1406574000000
+  eventType: info
+  article: infoDescription
+  place: Vortragsraum
+  tasks: 
+    - arbeit4
+Event(info2):
+  title: Info-Abend
+  start: 1407171600000
+  end: 1407178800000
+  eventType: info
+  article: infoDescription
+  tasks: 
+    - arbeit5
+ 
+  
+Task(arbeit5):
+  name: Vorträge vorbereiten
+  enoughHelpers: false     
+  helpersNeeded: 2
+  members: 
+    - admin
+  membersNotHelping:
+    - peter
+    - member
+  description: Fred fragen, worum es genau gehen soll.
+  event: info2 
+ 
+
+Event(info3):
+  title: Info-Abend
+  start: 1405357200000
+  end: 1405364400000
+  eventType: info
+  article: infoDescription
+  tasks: 
+    - arbeit5
+    
+Event(info4):
+  title: Info-Abend
+  start: 1442250000000
+  end: 1442257200000
+  eventType: info
+  article: infoDescription
+  tasks: 
+    - arbeit5
+Task(arbeit4):
+  name: Vorträge vorbereiten
+  enoughHelpers: false     
+  members: 
+    - admin
+  membersNotHelping:
+    - peter
+    - member
+  helpersNeeded: 2
+  description: Fred fragen, worum es genau gehen soll.
+  event: info
+  
+
+  
+Task(arbeit6):
+  name: Vorträge vorbereiten
+  enoughHelpers: false     
+  helpersNeeded: 2
+  members: 
+    - admin
+  membersNotHelping:
+    - peter
+    - member
+  description: Fred fragen, worum es genau gehen soll.
+  event: info2
+  
+Task(arbeit7):
+  name: Vorträge vorbereiten
+  enoughHelpers: false     
+  helpersNeeded: 2
+  members: 
+    - admin
+  membersNotHelping:
+    - peter
+    - member
+  description: Fred fragen, worum es genau gehen soll.
+  event: info2
+  
+
+
+
+

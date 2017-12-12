@@ -1,0 +1,33 @@
+
+#{set title:event.title /}
+<a name="${event.title}">
+	<h3>${event.title}</h3>
+</a>
+
+#{if event.gallery}
+#{list items:event.gallery.images, as:'image'} 
+#{if image_isFirst}
+<div align="right">
+	<a href="@{Galleries.showGallery(event.gallery.id)}"> <img
+		src="${event.gallery.address}thumbnails/${image.fileName}" width="180"
+		height="180" class="thumbnail" align="right">Bilder zu
+		${event.title}
+	</a>
+</div>
+#{/if} 
+#{/list}
+#{/if}
+<div align ="left">
+<h4>Das Wichtigste in Kürze:</h4>
+<p>Beginn: ${event.getStartDateAsString()}</p>
+<p>Ende: ${event.getEndDateAsString()}</p>
+<p>Ort: ${event.place}</p>
+</div>
+<h4>Beschreibung: </h4>
+<p align ="left">${event.article.content}</p>
+#{if event.questionnaires}
+<h4 class="text-">Gewinne Freikarten mit unserem <a href="/quiz/">Quiz</a>!</h4>
+#{/if}
+#{ifnot c_isLast}
+	<div class="border-row"></div>
+#{/ifnot} 

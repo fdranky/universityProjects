@@ -1,0 +1,109 @@
+package connection;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import logic.Antibiotic;
+import logic.Checklist;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+public class AntibioticDataSource {
+
+  // Database fields
+  private SQLiteDatabase database;
+  private MySQLiteHelper dbHelper;
+  private String[] allColumns = 
+	  { 
+		  MySQLiteHelper.ANTIBIOTIC_OWNER,
+		  MySQLiteHelper.ANTIBIOTIC_NAME,
+		  MySQLiteHelper.ANTIBIOTIC_DOSAGE,
+		  MySQLiteHelper.ANTIBIOTIC_PERIOD,
+		  MySQLiteHelper.ANTIBIOTIC_IVPO,
+		  MySQLiteHelper.ANTIBIOTIC_COMMENT,
+		  MySQLiteHelper.ANTIBIOTIC_PROPHTHER,
+		  MySQLiteHelper.ANTIBIOTIC_INTERVENTION,
+	  };
+
+  public AntibioticDataSource(Context context) {
+    dbHelper = new MySQLiteHelper(context);
+  }
+
+  public void open() throws SQLException {
+    database = dbHelper.getWritableDatabase();
+  }
+
+  public void close() {
+    dbHelper.close();
+  }
+  
+  public void clearTable() {
+	    database.delete(MySQLiteHelper.TABLE_ANTIBIOTIC, null, null);
+	  }
+
+  public void insertAntibiotic(Antibiotic newAntibiotic, String owner) {
+    
+	ContentValues values = new ContentValues();
+
+    values.put(MySQLiteHelper.ANTIBIOTIC_OWNER, owner);
+    values.put(MySQLiteHelper.ANTIBIOTIC_NAME, newAntibiotic.getName());
+    values.put(MySQLiteHelper.ANTIBIOTIC_DOSAGE, newAntibiotic.getDosage());
+    values.put(MySQLiteHelper.ANTIBIOTIC_PERIOD, newAntibiotic.getPeriode());
+    values.put(MySQLiteHelper.ANTIBIOTIC_IVPO, newAntibiotic.getivPo());
+    values.put(MySQLiteHelper.ANTIBIOTIC_COMMENT, newAntibiotic.getComment());
+    values.put(MySQLiteHelper.ANTIBIOTIC_PROPHTHER, newAntibiotic.isProphTher());
+    values.put(MySQLiteHelper.ANTIBIOTIC_INTERVENTION, arrayListToCSV(newAntibiotic.getInterventionPossibilities()));
+    
+    database.insert(MySQLiteHelper.TABLE_ANTIBIOTIC, null, values);
+  }
+
+  public ArrayList<Antibiotic> getAntibioticsOfPatient(String patient) {
+    ArrayList<Antibiotic> antibiotics = new ArrayList<Antibiotic>();
+
+    Cursor cursor = database.query(MySQLiteHelper.TABLE_ANTIBIOTIC,
+        allColumns, MySQLiteHelper.ANTIBIOTIC_OWNER + "= ?", new String[] {patient}, null, null, null);
+
+    cursor.moveToFirst();
+    while (!cursor.isAfterLast()) {
+   	Antibiotic newAntibiotic = cursorToAntibiotic(cursor);
+    	antibiotics.add(newAntibiotic);
+    	cursor.moveToNext();
+    }
+    // Make sure to close the cursor
+    cursor.close();
+    return antibiotics;
+  }
+
+
+  private Antibiotic cursorToAntibiotic(Cursor cursor) {
+	  
+	Antibiotic newAntibiotic = new Antibiotic(
+			cursor.getString(1),
+			cursor.getString(2),
+			cursor.getInt(3),
+			cursor.getString(4),
+			cursor.getString(5),
+			cursor.getString(6),
+			csvToArrayList(cursor.getString(7)));
+	
+	return newAntibiotic;
+  }
+  
+  /** "1,2,3" -> ArrayList [1, 2, 3] */
+  public ArrayList<String> csvToArrayList(String s) {
+	  	Log.w("lel", "Eingabe: "+s);
+		ArrayList<String> l = new ArrayList<String>(Arrays.asList(s.split(",")));
+	  	Log.w("lel", "als Liste: "+l.toString());
+	  	return l;
+  }
+  
+  /** ArrayList [1, 2, 3]  -> "1,2,3" */
+  public String arrayListToCSV(ArrayList<?> l) {
+		return l.toString().replace("[", "").replace("]", "").replace(", ", ",");
+  }
+
+} 

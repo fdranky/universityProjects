@@ -1,0 +1,66 @@
+#{extends 'main.html' /} #{set title:'Quiz!' /}
+
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-9">
+	<h2>Gewinne Freikarten für die Veranstaltung ${newestEvent.title}! Mache unseren Quiz!</h2>
+	<h3>${questionnaire.title}</h3>
+	
+	#{form @Questionnaires.enterQuestionnaire(questionnaire.id)} #{list
+	items:questions, as:'question'}
+	<div>
+		<b>${question.question}</b>
+	</div>
+	#{list items:question.answers, as:'answer'}
+	<div class="checkbox">
+	 <!-- error:  must insert extra index at the moment: always exactly four answers per question Silly!-->
+		<label> <input type="checkbox" name="answersGiven"
+			value="${answer.id}"  ${answersChecked[(question_index-1)*4+answer_index-1] ? 'checked':''} >
+			 ${answer.answer}
+		</label>
+	</div>
+	#{/list} 
+		#{ifnot questionsAnsweredCorrectly[question_index-1]}
+	<p class="bg-danger">Hier hast du einen Fehler gemacht!</p>
+	<p><a href="@{Topics.showTopic(question.topic.topic)}">Finde hier
+		zu dieser Frage weitere Infos!</a>  </p>
+		#{/ifnot} 
+	#{/list}
+			<p>
+	<div class="form-horizontal">
+		<div class="form-group">
+			<label for="participant" class="col-sm-2 control-label">
+				Email-Adresse:</label>
+				
+			<div class="col-sm-3">
+				<input class="form-control" type="text" name="emailAddress" id="emailAddress"
+					 #{if emailAddress != null} value = ${emailAddress}#{/if} #{else} placeholder="max@mustermann.de"#{/else}/>
+			</div>
+		</div>
+			</p>
+				#{ifError 'emailAddress'}
+	<p class="bg-danger" href="#" >Bitte Email-Adresse richtig eintragen</p>
+	#{/ifError}
+	</div>
+	<p>
+		<label for="code">Bist du ein Mensch? Gib bitte den Code ein: </label> <p><img
+			src="@{Questionnaires.captcha(randomID)}" /> </p><br /> <input type="text"
+			name="code" id="code" size="18" value="" /> <input type="hidden"
+			name="randomID" value="${randomID}" />
+	</p>
+	#{ifError 'code'}
+	<p class="bg-danger" href="#" >Bitte den richtigen Code eintragen</p>
+	#{/ifError}
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<input class="btn btn-default" type="submit"
+				value="Quiz abschließen!" />
+		</div>
+	</div>
+	#{/form}
+	</div>
+		<div class="col-xs-3">
+			#{include 'tags/sidebar.html' /}
+		</div>
+	</div>
+</div>

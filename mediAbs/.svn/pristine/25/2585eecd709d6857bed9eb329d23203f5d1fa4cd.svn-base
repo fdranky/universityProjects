@@ -1,0 +1,103 @@
+package com.example.mediabs;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Context;
+import android.view.LayoutInflater;
+//import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
+
+public class DiagnosticsActivity extends Activity {
+
+	ItemsAdapter adapter;
+	String[] EXAMPLE = new String[] { "Sepsis", "ZNS" };
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_diagnostics);
+
+		Button okButtonDia = (Button) findViewById(R.id.okButtonDia);
+		ListView lvDia = (ListView) findViewById(R.id.diagnosticListView);
+		adapter = new ItemsAdapter(this, EXAMPLE);
+
+		lvDia.setAdapter(adapter);
+
+		lvDia.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				CheckedTextView ctv = (CheckedTextView) arg1;
+				toggle(ctv);
+			}
+
+		});
+
+	}
+
+	public void toggle(CheckedTextView v) {
+		if (v.isChecked()) {
+			v.setChecked(false);
+		} else {
+			v.setChecked(true);
+		}
+	}
+
+	private class ItemsAdapter extends BaseAdapter {
+		String[] items;
+
+		public ItemsAdapter(Context context, String[] item) {
+			this.items = item;
+		}
+
+		// @Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = convertView;
+			if (v == null) {
+				LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				v = vi.inflate(R.layout.activity_intervention_items, null);
+			}
+			CheckedTextView post = (CheckedTextView) v
+					.findViewById(R.id.checkList);
+			post.setText(items[position]);
+			return v;
+		}
+
+		public int getCount() {
+			return items.length;
+		}
+
+		public Object getItem(int position) {
+			return position;
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+	}
+
+	// public void toggle(CheckedTextView v) {
+	// if (v.isChecked()) {
+	// v.setChecked(false);
+	// } else {
+	// v.setChecked(true);
+	//
+	// }
+	// }
+}
+
+// @Override
+// public boolean onCreateOptionsMenu(Menu menu) {
+// // Inflate the menu; this adds items to the action bar if it is present.
+// getMenuInflater().inflate(R.menu.diagnositcs, menu);
+// return true;
+// }
+

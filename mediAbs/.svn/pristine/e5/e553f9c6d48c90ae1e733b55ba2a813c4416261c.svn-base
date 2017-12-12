@@ -1,0 +1,72 @@
+package connection;
+
+import java.util.ArrayList;
+
+import logic.User;
+import logic.Ward;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+
+public class UserDataSource {
+
+  // Database fields
+  private SQLiteDatabase database;
+  private MySQLiteHelper dbHelper;
+  private String[] allColumns = { MySQLiteHelper.USER_NAME, MySQLiteHelper.USER_PASSWORD};
+
+  public UserDataSource(Context context) {
+    dbHelper = new MySQLiteHelper(context);
+  }
+
+  public void open() throws SQLException {
+    database = dbHelper.getWritableDatabase();
+  }
+
+  public void close() {
+    dbHelper.close();
+  }
+
+  public void insertUser(User newUser) {
+    
+	ContentValues values = new ContentValues();
+    values.put(MySQLiteHelper.USER_NAME, newUser.getName());
+    values.put(MySQLiteHelper.USER_PASSWORD, newUser.getPassword());
+    
+    database.insert(MySQLiteHelper.TABLE_USER, null, values);
+  }
+  
+  public void clearTable() {
+	    database.delete(MySQLiteHelper.TABLE_USER, null, null);
+	  }
+
+//  public void deletePatientColumns(PatientColumns name) {
+//    long id = name.getId();
+//    database.delete(MySQLiteHelper.TABLE_PATIENT, MySQLiteHelper.COLUMN_ID
+//        + " = " + id, null);
+//  }
+
+  public ArrayList<User> getAllUsers() {
+    ArrayList<User> users = new ArrayList<User>();
+
+    Cursor cursor = database.query(MySQLiteHelper.TABLE_USER,
+        allColumns, null, null, null, null, null);
+
+    cursor.moveToFirst();
+    while (!cursor.isAfterLast()) {
+    	User newUser = cursorToUser(cursor);
+    	users.add(newUser);
+    	cursor.moveToNext();
+    }
+    // Make sure to close the cursor
+    cursor.close();
+    return users;
+  }
+
+  private User cursorToUser(Cursor cursor) {
+	User newUser= new User(cursor.getString(0), cursor.getString(1));
+	return newUser;
+  }
+} 

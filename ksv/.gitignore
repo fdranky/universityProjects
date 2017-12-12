@@ -1,0 +1,5 @@
+/precompiled/
+/eclipse/
+.project
+.settings/
+/.classpath

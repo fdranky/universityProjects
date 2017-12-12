@@ -1,0 +1,75 @@
+package connection;
+
+import java.util.ArrayList;
+
+import logic.TimerData;
+import logic.Ward;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+
+public class TimerDataSource {
+
+  // Database fields
+  private SQLiteDatabase database;
+  private MySQLiteHelper dbHelper;
+  private String[] allColumns = { MySQLiteHelper.TIMER_ROTATION, MySQLiteHelper.TIMER_USER, 
+		  						  MySQLiteHelper.TIMER_DURATION, MySQLiteHelper.TIMER_WARD};
+
+  public TimerDataSource(Context context) {
+    dbHelper = new MySQLiteHelper(context);
+  }
+
+  public void open() throws SQLException {
+    database = dbHelper.getWritableDatabase();
+  }
+
+  public void close() {
+    dbHelper.close();
+  }
+
+  public void insertTimerData(TimerData newTimerData) {
+    
+	ContentValues values = new ContentValues();
+    values.put(MySQLiteHelper.TIMER_ROTATION, newTimerData.getRotation());
+    values.put(MySQLiteHelper.TIMER_USER, newTimerData.getUser());
+    values.put(MySQLiteHelper.TIMER_DURATION, newTimerData.getDuration());
+    values.put(MySQLiteHelper.TIMER_WARD, newTimerData.getWard());
+    
+    database.insert(MySQLiteHelper.TABLE_TIMER, null, values);
+  }
+
+//  public void deletePatientColumns(PatientColumns name) {
+//    long id = name.getId();
+//    database.delete(MySQLiteHelper.TABLE_PATIENT, MySQLiteHelper.COLUMN_ID
+//        + " = " + id, null);
+//  }
+
+  public ArrayList<TimerData> getAllTimerData() {
+    ArrayList<TimerData> timer = new ArrayList<TimerData>();
+
+    Cursor cursor = database.query(MySQLiteHelper.TABLE_TIMER,
+        allColumns, null, null, null, null, null);
+
+    cursor.moveToFirst();
+    while (!cursor.isAfterLast()) {
+    	TimerData newTimerData = cursorToTimerData(cursor);
+    	timer.add(newTimerData);
+    	cursor.moveToNext();
+    }
+    // Make sure to close the cursor
+    cursor.close();
+    return timer;
+  }
+  
+  public void clearTable() {
+	    database.delete(MySQLiteHelper.TABLE_WARD, null, null);
+  }
+
+  private TimerData cursorToTimerData(Cursor cursor) {
+	TimerData newTimerData = new TimerData(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
+	return newTimerData;
+  }
+} 

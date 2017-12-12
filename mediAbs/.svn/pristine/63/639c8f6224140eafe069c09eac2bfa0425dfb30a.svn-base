@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".PatientSelectionActivity" >
+
+    <TextView
+        android:id="@+id/antibioNoTextView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/blue_background"
+        android:gravity="center"
+        android:text="@string/patient"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ListView
+        android:id="@+id/patientList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/addPatientButton"
+        android:layout_marginTop="15dp" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/wardTextField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addPatientButton"
+        android:layout_alignParentRight="true" />
+
+    <Button
+        android:id="@+id/addPatientButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/antibioNoTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="76dp"
+        android:background="@drawable/rounded_button"
+        android:text="@string/addPatient" />
+
+    <Button
+        android:id="@+id/timerButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/antibioNoTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/rounded_button"
+        android:text="Timer starten/stoppen" />
+
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/wardTextField"
+        android:layout_alignBottom="@+id/wardTextField"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="16dp"
+        android:text="Chronometer" />
+
+</RelativeLayout>

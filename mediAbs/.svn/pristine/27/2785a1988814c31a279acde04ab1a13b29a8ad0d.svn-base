@@ -1,0 +1,179 @@
+package com.example.mediabs;
+
+import java.util.ArrayList;
+
+import logic.Antibiotic;
+import logic.Checklist;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.text.Editable;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
+
+public class EditAntibioticActivity extends Activity {
+
+
+	Checklist checklist ;	 
+	String patient;   // contains the patients name to identify the checklist for the patient
+	String buttonNo ;  // contains the medicine buttonNo (0,1 or 2), that show which medicament button was pressed
+	Update u = (Update) this.getApplication();
+	Antibiotic antibiotic = new Antibiotic("",0,0,"Po","","unknown",null);
+	
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_edit_antibiotic);
+		System.out.println("VOR UPDATE");
+
+		Update updateData = (Update) this.getApplication();		//get interface data from database
+		// get data from last activity 
+		Bundle lastscreen = getIntent().getExtras();
+
+		if(lastscreen !=null)
+		{			
+			buttonNo  = lastscreen.getString("ButtonNo");
+			patient   = lastscreen.getString("PatientDes");			
+			Log.v("buttonNo-zielkorb", buttonNo); Log.v("buttonNo-zielkorb", patient);
+		}
+		checkBoxListener();
+
+		AutoCompleteTextView editAntibioAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editAntibioticAutoCompleteTextView);
+		//AutoCompleteTextView editDosageAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.editDosageAutoCompleteTextView);
+
+		editAntibioAutoCompleteTextView.requestFocus();
+	
+		createAutoCompleteTextView(updateData.getAllAntibiotics(), R.id.editAntibioticAutoCompleteTextView);	
+		createAutoCompleteTextView(updateData.getAllDosages(), R.id.editDosageAutoCompleteTextView);
+			
+		buttonListener();
+		
+		//onselected get antibioticName
+	/*			Editable antibioticName = editAntibioAutoCompleteTextView.getText();		
+				System.out.println(antibioticName.toString());
+				antibiotic.setName(antibioticName.toString());
+				Log.v("antibioticName", antibioticName.toString()); 
+				Log.v("antibioticName", "danach"); 
+		*/		//onselected get dosage
+	/*			int dosage=Integer.getInteger(editDosageAutoCompleteTextView.getText().toString());
+				antibiotic.setDosage(dosage);	
+				System.out.println(dosage);
+				//Log.v("antibioticName", dosage.toString()); 
+*/
+	}
+
+	/*
+	 * creates lists for autocompleteTextViews
+	 * @param outputArrayString					contains the ArrayList of the shown autoCompleteTextList
+	 * @param idTextView 						contains the id of the textview
+	 * */
+
+	public void createAutoCompleteTextView(ArrayList<String> outputArrayString, int idTextView){
+	
+		ArrayAdapter<String> autoCompleteTextAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, outputArrayString);	
+		AutoCompleteTextView editAutoCompleteTextView = (AutoCompleteTextView) findViewById(idTextView);
+		editAutoCompleteTextView.setThreshold(1);
+		
+		Editable text = editAutoCompleteTextView.getText();
+		System.out.println(text);
+		//TODO 
+		// speichern in Logic
+		editAutoCompleteTextView.setAdapter(autoCompleteTextAdapter);
+		
+	}
+	/*
+	 * previous treatment chechbox listener - makes sure that only one checkbox
+	 * is checked
+	 */
+	private void checkBoxListener() {
+	
+		final CheckBox therCheckBox    = (CheckBox) findViewById(R.id.therCheckBox);
+		final CheckBox proCheckBox     = (CheckBox) findViewById(R.id.proCheckBox);
+		final CheckBox unknownCheckBox = (CheckBox) findViewById(R.id.unknownCheckBox);
+		/*
+		 * proTher chechbox listener - makes sure that only one
+		 * checkbox is checked
+		 */
+		therCheckBox.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (therCheckBox.isChecked()) {					
+					antibiotic.setProphTher("ther");											
+					proCheckBox.setChecked(false);
+					unknownCheckBox.setChecked(false);
+					save();	
+				}
+				System.out.println("in checklist therCheckBox");
+			}
+		});
+		proCheckBox.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (proCheckBox.isChecked()) {
+
+					antibiotic.setProphTher("pro");					
+					therCheckBox.setChecked(false);
+					unknownCheckBox.setChecked(false);
+					System.out.println("vor save");
+					save();	
+				}
+				System.out.println("in checklist therCheckBox");
+			}
+		});
+		unknownCheckBox.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (unknownCheckBox.isChecked()) {
+					antibiotic.setProphTher("unknown");
+					proCheckBox.setChecked(false);
+					therCheckBox.setChecked(false);
+					save();	
+				}
+				System.out.println("in checklist therCheckBox");
+			}
+		});
+	}
+	/*
+	 * button listener of interventionPossibilitiesButton
+	 */
+	public void buttonListener(){
+		
+		Button interventionPossibilitiesButton = (Button) findViewById(R.id.interventionPossibilitiyButton);
+		interventionPossibilitiesButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent toInterventionPossibilitiesScreen = new Intent(getApplicationContext(),
+						InterventionPossibilitiesActivity.class);
+			//	toInterventionPossibilitiesScreen.putExtra("windoNo", "0");
+				//TODO 
+				// speichern in Logic
+				startActivity(toInterventionPossibilitiesScreen);
+			}
+		});
+	}
+	public void save(){
+		//wenn antnibiotica name gesetzt-> speichern
+		//FEHLER
+		
+	/*	for(Checklist checkl : u.getChecklistList()){
+			if (checkl.getOwner().equals(patient)){
+				checkl.addAntibiotic(antibiotic);
+				checklist = checkl;
+			} else checklist = new Checklist(false, patient, "unbekannt", "team", 0, 0, null, null);
+	
+		}*/
+	}
+}
+
+

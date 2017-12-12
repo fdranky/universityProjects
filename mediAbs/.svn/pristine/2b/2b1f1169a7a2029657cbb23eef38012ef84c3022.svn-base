@@ -1,0 +1,175 @@
+package com.example.mediabs;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
+import logic.Checklist;
+import logic.Patient;
+
+public class ChecklistActivity extends Activity {
+
+	String ward;
+	String patientDes;
+	String genderStr;
+	Checklist checklist;
+	
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_checklist);
+
+		// get interface data from database
+		Update u = (Update) this.getApplication();
+		// update_checklist = updateData.getChecklist();
+
+		Intent lastScreen = getIntent();
+		ward = lastScreen.getStringExtra("ward");
+		patientDes = lastScreen.getStringExtra("patient");
+		
+		//set wardview
+		TextView wtv = (TextView)(findViewById(R.id.inputWardTextField));
+		wtv.setText(ward);
+		
+		//get owner
+		Patient pat = u.findPatByName(patientDes);
+		
+		//set views from owner data
+		TextView iptv = (TextView) (findViewById(R.id.inputPatientTexField));
+		iptv.setText(patientDes);
+		
+		TextView ibtv = (TextView) (findViewById(R.id.inputBirthdayTextField));
+		ibtv.setText(String.valueOf(pat.getBirthday()));
+		
+		TextView igtv = (TextView) (findViewById(R.id.inputGenderTextField));
+		if (pat.getGender().equals("f")){
+			genderStr = "weibl.";
+		} else genderStr = "männl.";
+		
+		igtv.setText(genderStr);
+		System.out.println(u.getChecklistList().toString());
+		//Checklist 
+		for(Checklist checkl : u.getChecklistList()){
+			if(checkl.getOwner().equals(patientDes)){
+				checklist = checkl;
+			}
+		} 
+		if (checklist == null){
+					checklist = new Checklist(false, patientDes, "unbekannt", "team", 0, 0, null, null);
+					u.addCheckList(checklist);
+					System.out.println(u.getChecklistList().toString());
+		}
+		
+		//Buttons
+		Button editPatientButton = (Button)findViewById(R.id.editPatientButton);
+		editPatientButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+				
+				// Neues Intent anlegen
+				Intent toEditScreen = new Intent(getApplicationContext(),
+						EditPatientActivity.class);
+				toEditScreen.putExtra("ward", ward);
+				toEditScreen.putExtra("patientExist", patientDes);
+				startActivity(toEditScreen);
+			}
+		});
+		
+		
+		Button diagnosisButton = (Button)findViewById(R.id.diagnosisButton);
+		diagnosisButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+				
+				// Neues Intent anlegen
+				Intent toDiagnosisScreen = new Intent(getApplicationContext(),
+						MicrobiologyActivity.class);
+				toDiagnosisScreen.putExtra("patName", patientDes);
+				startActivity(toDiagnosisScreen);
+			}
+		});
+
+		Button microbioButton = (Button)findViewById(R.id.microBiologyButton);
+		microbioButton.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(View arg0) {
+				
+				// Neues Intent anlegen
+				Intent toMicrobioScreen = new Intent(getApplicationContext(),
+						MicrobiologyActivity.class);
+				toMicrobioScreen.putExtra("patName", patientDes);
+				startActivity(toMicrobioScreen);
+			}
+		});
+
+		/*buttonListener(R.id.editMedicine0Button);
+
+		buttonListener(R.id.editMedicine1Button);
+		buttonListener(R.id.editMedicine2Button);
+		*/
+		buttonListener(R.id.medicine0Button,"0",patientDes);
+		buttonListener(R.id.medicine1Button,"1",patientDes);
+		buttonListener(R.id.medicine2Button,"2",patientDes);
+
+		checkBoxListener();
+
+	}
+
+	/*
+	 * previous treatment chechbox listener - makes sure that only one checkbox
+	 * is checked
+	 */
+	private void checkBoxListener() {
+
+		final CheckBox checkBoxYes = (CheckBox) findViewById(R.id.previousTreatmentCheckBoxYes);
+		final CheckBox checkBoxNo = (CheckBox) findViewById(R.id.previousTreatmentCheckBoxNo);
+
+		checkBoxYes.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (checkBoxYes.isChecked()) {
+//					checklist.setPreviousTreatment(true);
+					checkBoxNo.setChecked(false);
+				}
+				System.out.println("in checklist YES");
+
+			}
+		});
+		checkBoxNo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (checkBoxNo.isChecked()) {
+//					checklist.setPreviousTreatment(false);
+					checkBoxYes.setChecked(false);
+				}
+				System.out.println("in checklist NO");
+
+			}
+		});
+
+	}
+
+	private void buttonListener(int idButton, final String buttonNo, final String patientDes) {
+
+		Button medicineButton = (Button) findViewById(idButton);
+		medicineButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				System.out.println("in onclickbutton");
+				Intent toAntibioticScreen = new Intent(getApplicationContext(),
+						EditAntibioticActivity.class);
+				// TODO
+				// speichern in Logic
+				toAntibioticScreen.putExtra("ButtonNo", buttonNo);
+				toAntibioticScreen.putExtra("PatientDes", patientDes);
+				startActivity(toAntibioticScreen);
+			}
+		});
+
+	}
+}

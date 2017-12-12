@@ -1,0 +1,8 @@
+		{
+			"id": ${_arg.id},
+			"title": "${_arg.title}",
+			"url": "@{Events.showEvent(_arg.id)}",
+			"class": "event-warning",
+			"start": ${_arg.start},
+			"end":   ${_arg.end}
+		}

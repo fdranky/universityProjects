@@ -1,0 +1,49 @@
+#{extends 'main.html' /} #{set title:'Aufgaben' /} 
+<div class= "container">
+<div class="row">
+<div class="col-xs-12">
+<h1>Wir brauchen deine Hilfe!</h1>
+#{list items:events, as: 'event'}
+<h3>Für: ${event.title}</h3>
+
+<ul>
+	#{list items: event.tasks, as: 'task'}
+	<li><h5>${task.name}</h5>
+		<p>${task.description}</p></li>
+		#{if !member.isMemberHelping(task.id) && !task.enoughHelpers}
+		#{form @Tasks.enlistForTask(member.id,task.id)}
+	<button type="submit" class="btn btn-default" >
+		<span class="glyphicon glyphicon-ok"></span> Helfen
+	</button>
+	#{/form}
+		#{/if}
+		#{else}
+		#{form @Tasks.withdrawFromTask(member.id,task.id)}
+	<button type="submit" class="btn btn-default">
+		<span class="glyphicon glyphicon-remove"></span> Austragen
+	</button>
+	#{/form}
+		#{/else}
+	<p>Bisher helfen hier: 
+	#{list items: task.members, as: 'member'}
+	<a href="mailto:${member.emailAddress}">${member.emailAddress} </a>
+	#{/list}
+	</p>
+	#{if !task.enoughHelpers}
+	<p class="text-warning">Es fehlen noch ${task.helpersNeeded} Helfer!</p>
+	<p class="text-warning">Hier arbeiten bisher noch nicht mit: 
+	 #{list items: task.getMembersNotHelping(), as: 'member'}
+	<a href="mailto:${member.emailAddress}">${member.emailAddress} </a>
+	#{/list}
+	</p>
+	#{/if}
+	#{else}
+	<p class="text-success">Hier haben wir schon genug Helfer!</p>
+	#{/else}
+	#{/list}
+</ul>
+<a href="@{Events.showEvent(event.id)}">Hier kannst du mehr über diese Veranstaltung erfahren.</a>
+#{/list}
+</div>
+</div>
+</div>

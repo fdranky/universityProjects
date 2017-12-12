@@ -1,0 +1,170 @@
+package com.example.mediabs;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import connection.TimerDataSource;
+import logic.Patient;
+import logic.TimerData;
+import logic.Ward;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
+
+public class PatientSelectionActivity extends Activity {
+
+	private List<String> valueList = new ArrayList<String>();
+	private List<Patient> patList = new ArrayList<Patient>();
+	private String wardName;
+	private ListView lvP ;
+	private	Update u;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_patient_selection);
+
+		u = (Update) this.getApplication();
+
+		ArrayList<Ward> wardList = u.getWardList();
+		Log.w("list", "Länge der Wardlist:" + wardList.size());
+
+		Intent intent = getIntent();
+		wardName = intent.getStringExtra("selected");
+		((TextView) (findViewById(R.id.wardTextField))).setText(wardName);
+
+		// get the PatientList from wardName
+		for (Ward ward : wardList) {
+			if (wardName
+					.equals(ward.getWardNumber() + " " + ward.getWardName())) {
+				patList = ward.getPatientList();
+			}
+		}
+
+		Log.w("list", "L�nge der Patientenlist:" + patList.size());
+		// Toast toast2 =
+		// Toast.makeText(getApplicationContext(),patList.toString(),Toast.LENGTH_LONG);
+		// toast2.show();
+
+		// Patientnames in new list
+		for (Patient patient : patList) {
+			valueList.add(patient.getDescription());
+		}
+		
+		Collections.sort(valueList);
+
+		Log.w("list", "L�nge der Valuelist:" + valueList.size());
+
+		MyAdapter adapterP = new MyAdapter(getApplicationContext(),
+				R.layout.my_list_item, valueList);
+
+		lvP = (ListView) findViewById(R.id.patientList);
+
+		lvP.setAdapter(adapterP);
+		
+		lvP.refreshDrawableState();
+
+		// Listener
+		lvP.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Intent intent = new Intent();
+				intent.setClassName(getPackageName(), getPackageName()
+						+ ".ChecklistActivity");
+				intent.putExtra("patient", lvP.getAdapter().getItem(arg2)
+						.toString());
+				intent.putExtra("ward", wardName);
+				startActivity(intent);
+			}
+		});
+
+		// define Elems
+		Button addPatientButton = (Button) findViewById(R.id.addPatientButton);
+		Button timerButton = (Button) findViewById(R.id.timerButton);
+
+		// ButtonListener
+		addPatientButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent toPatientScreen = new Intent(getApplicationContext(),
+						EditPatientActivity.class);
+				toPatientScreen.putExtra("ward", wardName);
+				startActivity(toPatientScreen);
+				PatientSelectionActivity.this.finish();
+			}
+		});
+
+		timerButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+			if(u.isChronometerRunning() == false)
+				u.chronoStart(getApplicationContext());
+			else {
+				u.chronoStop(getApplicationContext());
+				/*Save Time in Database*/
+				
+				/* find ward number */
+				int wardNumber = 1;
+				for (Ward ward : u.getWardList()) {
+					if (wardName
+							.equals(ward.getWardNumber() + " " + ward.getWardName())) {
+						wardNumber = ward.getWardNumber();
+					}
+				}
+				TimerData timer = new TimerData(u.getActualRound(), 
+						u.getCurrentUserName(), 
+						(int) u.getElapsedSec(), 
+						wardNumber);
+				u.storeTimerData(getApplicationContext(), timer);
+			}
+			}
+		});		
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		lvP.invalidateViews();
+	}
+
+	public class MyAdapter extends ArrayAdapter<String> {
+
+		public MyAdapter(Context context, int resource, List<String> objects) {
+			super(context, resource, objects);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View view = super.getView(position, convertView, parent);
+//			view.
+//			for (Patient pat : patList) {
+			Patient pat = u.findPatByName(super.getItem(position));
+				if (pat.isAbsCareGivingState()) {
+					view.setBackgroundColor(Color.rgb(215,247,247));
+				} else
+					view.setBackgroundColor(Color.WHITE);
+//			}
+			return view;
+		}
+	}
+	
+}

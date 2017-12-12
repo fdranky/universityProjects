@@ -1,0 +1,21 @@
+#{extends 'main.html' /}
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-9">
+			#{list items:events, as:'event'} 
+			#{include 'Events/event.html'/} 
+			#{/list}
+		</div>
+		<div class="col-xs-3">
+			<h4>Finde Informationen zu:</h4>
+			#{list items:events, as:'event'}
+			<p>
+				<a href="#${event.title}">${event.title}</a>
+			</p>
+			#{/list}
+			#{include 'tags/sidebar.html' /}
+		</div>
+	</div>
+
+</div>

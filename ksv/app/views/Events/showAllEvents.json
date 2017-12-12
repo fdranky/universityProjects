@@ -1,0 +1,11 @@
+
+{
+	"success": 1,
+	"result": [ 		
+	#{list items:events, as:'c'}
+		#{event c /}
+        #{ifnot c_isLast},#{/ifnot}
+      #{/list}
+	]
+}
+

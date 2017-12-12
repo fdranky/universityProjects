@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>#{get 'title' /}</title>
+<meta charset="${_response_encoding}">
+<link rel="stylesheet" href="/public/stylesheets/bootstrap.min.css">
+<link rel="stylesheet" href="/public/stylesheets/main.css">
+<link rel="stylesheet" href="/public/stylesheets/calendar.css">
+<link rel="stylesheet" href="/public/stylesheets/footer.css">
+<link rel="icon" type="image/png" href="/public/images/favicon.png">
+<script type="text/javascript"
+	src="/public/javascripts/jquery-1.11.0.min.js"></script>
+<script type="text/javascript"
+	src="/public/javascripts/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="/public/javascripts/underscore-min.js"></script>
+
+
+</head>
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/"><img alt="KSV Logo" src="/public/images/ksvlogo.png"></a>
+		</div>
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<!-- TODO active setting dynamic -->
+				<li class="dropdown ${request.path.startsWith("/thema/Verein")||request.path.startsWith("/thema/Kontakt") ? 'active':''}"><a href="/thema/Verein">Über uns<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li ><a href="/thema/Verein">Verein</a></li>
+						<li><a href="/thema/Kontakt">Kontakt</a></li>
+					</ul></li>
+				<li class="dropdown ${request.path.startsWith("/eventtyp/")||request.path.startsWith("/allevents") ? 'active':''}"><a href="/allevents" 
+					>Events<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="/eventtyp/party">Partys</a></li>
+						<li><a href="/eventtyp/info">Info-Abende</a></li>
+
+					</ul></li>
+				<li class="dropdown ${request.path.startsWith("/thema/Geschichte")||request.path.startsWith("/thema/Land") ? 'active':''}"><a href="/thema/Land" >Kamerun<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="/thema/Geschichte">Geschichte</a></li>
+						<li><a href="/thema/Land">Land</a></li>
+					</ul></li>
+				<li class="${request.path.startsWith("/quiz") ? 'active':''}""><a href="/quiz/">Quiz</a></li>
+				<li><a href="/gallerie/">Bildergalerie</a></li> 
+				#{secure.check
+				'member'}
+				<li class="${request.path.startsWith("/aufgaben") ? 'active':''}"><a href="/aufgaben/">Aufgaben</a></li>
+				#{/secure.check}
+			</ul>
+			<form class="navbar-form navbar-right" role="form">
+				<div class="form-group">
+					#{if session.username} <a href="@{Secure.logout()}">Log out</a>
+					#{/if} #{else} <a href="/login">Log dich ein!</a> #{/else}
+				</div>
+			</form>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container-fluid -->
+</nav>
+#{doLayout /}
+
+<div class="container">
+<div class="row">
+<div class="col-xs-12 footer">
+        Kontakt: <a href="mailto:ksv@gmail.de">ksv@gmail.com</a> – 0431/5584332 © Kamerunischer Studentenverein Kiel
+</div>
+</div>
+</div>

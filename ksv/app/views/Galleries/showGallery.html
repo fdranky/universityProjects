@@ -1,0 +1,21 @@
+#{extends 'main.html' /} #{set title:'Bildergalerie' /}
+<script src="/public/javascripts/lightbox.min.js"></script>
+<link href="/public/stylesheets/lightbox.css" rel="stylesheet" />
+</p>
+
+<div class="container">
+	<h1>${gallery.name}</h1>
+	<div class="row">
+		#{list items:gallery.images, as:'image'}
+		<div class="col-xs-3">
+			<a class="thumbnail" href="${gallery.address}${image.fileName}"
+				rel="lightbox[" ${gallery.name}"]" data-title="${image.name}"
+				data-lightbox="${gallery.name}"> <img
+				src="${gallery.address}thumbnails/${image.fileName}" width="180"
+				height="180" class=""></a></a>
+		</div>
+		#{if image_index % 4 == 0 && !image_isFirst}
+	</div>
+	<div class="row">#{/if} #{if image_isLast}</div>
+	#{/if} #{/list}
+</div>
